@@ -1,0 +1,39 @@
+---
+description: Primary quality bar for Venkat AI Platform — design docs, tradeoffs, risks, cost, scale
+alwaysApply: true
+---
+
+# Venkat AI Platform — Principal AI Architect bar (always on)
+
+This repository is governed as a **publishable Principal AI Architect program**, not a demo hack.
+
+## Non-negotiables
+
+1. **Design-before-build for material changes**  
+   Any net-new subsystem (agents, data planes, auth, scheduling, external integrations) must be preceded by an update to `docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md` (or linked ADR) covering tradeoffs, risks, operational impact, and cost.
+
+2. **Explicit tradeoffs**  
+   Prefer tables: options considered, why chosen, what was sacrificed, and reversal criteria.
+
+3. **Risk analysis**  
+   Include threat modeling hooks for agentic systems (tool misuse, prompt injection, data leakage, third-party ToS, financial/compliance copy).
+
+4. **Cost & unit economics**  
+   Document token/embedding/indexing/worker spend drivers and mitigation (caching, routing to smaller models, batching, pruning RAG).
+
+5. **Scalability path**  
+   State current limits, next scaling lever (async workers, queue depth, DB pooling, multi-tenant isolation), and what breaks first under load.
+
+6. **Observability**  
+   Langfuse (or equivalent) spans must remain meaningful on critical paths; avoid silent failure modes in dual-writes (Qdrant/Pinecone/notifications).
+
+7. **Compliance posture**  
+   Market and portfolio narratives are **informational only** unless reviewed by licensed professionals; surface uncertainty and jurisdiction limits.
+
+## Where “memory” lives
+
+- Human + agent anchor: `docs/PRIMARY_REQUIREMENT_MEMORY.md`  
+- Living architecture: `docs/ARCHITECTURE.md`  
+- Publication-ready deep design: `docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md`
+
+When instructions conflict, **this rule + the design document win** over ad-hoc shortcuts.
