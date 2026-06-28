@@ -7,6 +7,9 @@ _INTENTS = (
     "prototype_idea",
     "market_analysis",
     "rag_query",
+    "rag_expert",
+    "deep_research",
+    "architecture_review",
     "enterprise_api",
     "portfolio_risk",
     "calendar_commitments",
@@ -25,6 +28,9 @@ Return exactly one label from: {", ".join(_INTENTS)}.
 - prototype_idea: product ideas, MVPs, technical prototypes
 - market_analysis: stocks, markets, ticker commentary (informational only)
 - rag_query: questions about uploaded docs / internal knowledge base
+- rag_expert: compare RAG architectures (naive, hybrid, multi-query, HyDE, rerank, parent doc)
+- deep_research: multi-source deep research with loops (routes to Research orchestrator)
+- architecture_review: system design redline, threat model, compliance (routes to Architecture orchestrator)
 - enterprise_api: Salesforce, CRM, enterprise integrations
 - portfolio_risk: scenarios, stress testing narratives, factor discussions (not advice)
 - calendar_commitments: schedule alignment, deep work planning vs meetings

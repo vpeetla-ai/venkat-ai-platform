@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, health, ingest, threads, workflows
+from app.api.routes import chat, health, ingest, orchestrators, rag, threads, workflows
 from app.core.config import get_settings
 from app.db.session import dispose_engine, get_engine
 
@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Venkat AI Platform",
     description="Multi-agent orchestration API (LangGraph + FastAPI)",
-    version="0.2.0",
+    version="0.3.0",
     lifespan=lifespan,
 )
 
@@ -43,4 +43,6 @@ app.include_router(health.router)
 app.include_router(chat.router)
 app.include_router(threads.router)
 app.include_router(ingest.router)
+app.include_router(orchestrators.router)
+app.include_router(rag.router)
 app.include_router(workflows.router)

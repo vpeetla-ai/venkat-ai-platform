@@ -20,9 +20,10 @@ VAP is a **multi-agent orchestration platform** with:
 
 | Capability | Implementation |
 |------------|----------------|
-| Intent routing | Chief orchestrator — 13+ intent labels |
+| Intent routing | Chief orchestrator — 16 intent labels + 3 orchestrators |
 | Parallel evidence | asyncio worker bundles per intent |
-| RAG | Qdrant primary + optional Pinecone ingest mirror |
+| RAG architectures | 6 strategies (naive, hybrid, multi-query, HyDE, rerank, parent-doc) |
+| Loop patterns | ReAct, Reflection, Plan-Execute (`agents/loops/`) |
 | QA gate | CriticAgent (LLM review) before external delivery |
 | Persistence | Postgres threads, messages, workflow runs |
 | Schedules | Redis + ARQ cron for daily briefs |
@@ -34,21 +35,39 @@ VAP is a **multi-agent orchestration platform** with:
 
 | Component | Status |
 |-----------|--------|
-| LangGraph orchestrator (9 linear nodes) | ✅ |
-| Chief intent routing (13 labels) | ✅ |
-| Parallel asyncio worker bundles | ✅ |
-| Qdrant RAG + `POST /ingest` | ✅ |
-| Pinecone | 🟡 Ingest mirror only — reads from Qdrant |
+| LangGraph orchestrator (9 linear nodes) | ✅ Platform pipeline |
+| Deep Research orchestrator | ✅ Recon + ReAct + reflection |
+| Architecture Review orchestrator | ✅ Specialists + plan-execute + reflection |
+| Chief intent routing (16 labels) | ✅ Auto-routes to orchestrators |
+| RAG strategy library (6 patterns) | ✅ `GET /rag/strategies` |
+| Loop pattern agents | ✅ ReAct, Reflection, Plan-Execute |
+| Automated test suite | ✅ `pytest` in `backend/tests/` |
 | Postgres thread persistence | ✅ |
-| ARQ scheduled daily brief | ✅ |
-| Langfuse spans | ✅ |
-| Chat UI (`/chat`) | ✅ |
-| Dashboard / Monitor pages | 🟡 Placeholder shells |
-| Approval gateway / HITL resume | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) |
-| AegisAI gateway integration | 🟡 Documented — not wired in code yet |
-| Automated test suite / CI | ❌ Planned |
+| Pinecone | 🟡 Ingest mirror only |
+| Approval gateway / HITL | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) |
 
 **What VAP is not:** an enterprise governance control plane. For policy, HITL queues, signed audit, and fleet registry, use [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform).
+
+---
+
+## Three orchestrators
+
+| Orchestrator | Intent | Sub-agents / loops |
+|--------------|--------|-------------------|
+| **Platform** (default) | `general`, `rag_query`, `news_learning`, … | Parallel workers + critic |
+| **Deep Research** | `deep_research` | Web, RagExpert, gap analyst, ReAct, reflection |
+| **Architecture Review** | `architecture_review` | Security, compliance, RAG, plan-execute, reflection |
+
+```bash
+curl -X POST http://localhost:8000/chat -H 'Content-Type: application/json' \
+  -d '{"message":"Deep research on enterprise agent governance"}'
+
+curl -X POST http://localhost:8000/orchestrators/research/run \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"Compare LangGraph vs custom orchestrators for FinOps"}'
+```
+
+[RAG architectures](docs/RAG_ARCHITECTURES.md) · [Full architecture](docs/ARCHITECTURE.md)
 
 ---
 

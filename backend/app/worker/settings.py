@@ -16,7 +16,7 @@ load_dotenv(_env_path)
 
 async def run_daily_brief(ctx):  # noqa: ARG001
     from app.core.config import get_settings
-    from app.orchestrator.graph import run_platform_turn
+    from app.orchestrator.registry import run_platform_turn
 
     settings = get_settings()
     if not settings.daily_brief_enabled:

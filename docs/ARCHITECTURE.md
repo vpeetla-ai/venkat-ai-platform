@@ -19,7 +19,48 @@
 | Observability | Langfuse | Spans via `start_as_current_observation` |
 | Notifications | Slack / Telegram / Twilio WhatsApp | WhatsApp via Meta Cloud API can plug in similarly |
 
-## LangGraph flow
+## Orchestrators (multi-pipeline)
+
+VAP ships **three LangGraph orchestrators** — auto-routed by Chief intent or forced via `POST /chat` `orchestrator` field / `POST /orchestrators/{id}/run`.
+
+| ID | Trigger intents | Pipeline |
+|----|-----------------|----------|
+| `platform` | default (general, news_learning, rag_query, …) | Chief → workers → insight → critic → notify |
+| `research` | `deep_research` | Scope → recon (web + all RAG strategies) → gap analysis → **ReAct loop** → synthesize → **reflection loop** |
+| `architecture` | `architecture_review` | Security + compliance + RAG + web → **plan-execute loop** → synthesize → reflection → critic |
+
+Registry: `backend/app/orchestrator/registry.py`
+
+## Loop engineering patterns
+
+Reusable modules in `backend/app/agents/loops/`:
+
+| Pattern | Module | Use in VAP |
+|---------|--------|------------|
+| **ReAct** | `react_loop.py` | Deep Research orchestrator — tool loop (web, rag_search) |
+| **Reflection** | `reflection_loop.py` | Research + Architecture orchestrators — draft/critique/improve |
+| **Plan-Execute** | `plan_execute_loop.py` | Architecture orchestrator — numbered steps + synthesis |
+
+Aligns with [Production Agent Patterns](https://github.com/vpeetla-ai/ai-content-factory/tree/main/docs/agent-patterns) (ReAct, Reflection, Plan-Execute).
+
+## RAG architectures
+
+All strategies in `backend/app/memory/rag_strategies.py` — exposed via `GET /rag/strategies`, `POST /rag/retrieve`, and **RagExpertAgent**.
+
+| Strategy | Description |
+|----------|-------------|
+| `naive` | Vector top-k (baseline) |
+| `multi_query` | LLM query variants → merge results |
+| `hybrid` | Vector + keyword scoring (default for KnowledgeAgent) |
+| `parent_document` | Chunk search → return `parent_text` from ingest metadata |
+| `rerank` | Over-fetch + LLM rerank |
+| `hyde` | Hypothetical document embedding |
+
+Ingest parent-doc RAG: include `metadata.parent_id` and `metadata.parent_text` in `POST /ingest` chunks.
+
+Details: [docs/RAG_ARCHITECTURES.md](RAG_ARCHITECTURES.md)
+
+## LangGraph flow (platform orchestrator)
 
 ```
 START → chief → planner → workers → content_extra → insight → critic → compose → notify → END
@@ -38,7 +79,8 @@ Source: `backend/app/orchestrator/graph.py`
 
 ## Chief intents (routing labels)
 
-`general`, `news_learning`, `prototype_idea`, `market_analysis`, `rag_query`, `enterprise_api`,  
+`general`, `news_learning`, `prototype_idea`, `market_analysis`, `rag_query`, `rag_expert`,  
+`deep_research`, `architecture_review`, `enterprise_api`,  
 `portfolio_risk`, `calendar_commitments`, `budget_telemetry`, `security_review`, `compliance`,  
 `meeting_brief`, `experiment`.
 
@@ -46,7 +88,7 @@ Source: `backend/app/orchestrator/graph.py`
 
 | Agent | Type | Notes |
 |-------|------|-------|
-| **ChiefOrchestrator** | LLM classifier | `agents/chief.py` — 13 intent labels |
+| **ChiefOrchestrator** | LLM classifier | `agents/chief.py` — 16 intent labels |
 | **PlannerAgent** | LLM | Human-readable plan (`agents/planner.py`) |
 | **KnowledgeAgent** | Tool-backed RAG | Qdrant retrieval (`agents/knowledge.py`) |
 | **WebAgent** | Tool-backed | Tavily when `TAVILY_API_KEY` set |
@@ -86,7 +128,11 @@ Worker bundle selection: `backend/app/orchestrator/workers.py` (`workers_for_int
 
 | Route | Purpose |
 |-------|---------|
-| `POST /chat` | Run LangGraph workflow; optional `notify_channels` |
+| `POST /chat` | Run workflow; optional `orchestrator` field |
+| `GET /orchestrators` | List orchestrators |
+| `POST /orchestrators/{id}/run` | Invoke specific pipeline |
+| `GET /rag/strategies` | List RAG architecture names |
+| `POST /rag/retrieve` | Test a RAG strategy |
 | `GET /threads/{id}/messages` | Thread history from Postgres |
 | `POST /ingest` | Upsert chunks to Qdrant (+ optional Pinecone mirror) |
 | `GET /health` | Liveness |

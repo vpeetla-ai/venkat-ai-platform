@@ -13,6 +13,10 @@ class ChatRequest(BaseModel):
         default=None,
         description="Continue an existing conversation; omit to start a new persisted thread",
     )
+    orchestrator: str | None = Field(
+        default=None,
+        description="Force orchestrator: platform | research | architecture (auto-routed by intent if omitted)",
+    )
 
 
 class ChatResponse(BaseModel):

@@ -21,6 +21,7 @@ from app.agents.news_research import run_news_research_agent
 from app.agents.planner import plan_tasks
 from app.agents.portfolio_risk import run_portfolio_risk_agent
 from app.agents.prototype_builder import run_prototype_builder_agent
+from app.agents.rag_expert import run_rag_expert_agent
 from app.agents.security_review import run_security_review_agent
 from app.agents.web import run_web_agent
 from app.observability.langfuse_client import langfuse_span
@@ -41,6 +42,7 @@ SPECIALISTS: dict[str, list[tuple[str, AgentFn]]] = {
     ],
     "market_analysis": [("market", run_market_intelligence_agent)],
     "rag_query": [("knowledge", run_knowledge_agent)],
+    "rag_expert": [("rag_expert", run_rag_expert_agent)],
     "enterprise_api": [("api", run_api_agent)],
     "portfolio_risk": [
         ("portfolio_risk", run_portfolio_risk_agent),
@@ -175,7 +177,7 @@ def get_compiled_graph():
     return _graph
 
 
-async def run_platform_turn(
+async def run_platform_graph_turn(
     user_message: str, notify_channels: list[str] | None = None
 ) -> VState:
     graph = get_compiled_graph()
@@ -185,3 +187,7 @@ async def run_platform_turn(
         "outputs": {},
     }
     return await graph.ainvoke(init)
+
+
+# Backward-compatible alias
+run_platform_turn = run_platform_graph_turn

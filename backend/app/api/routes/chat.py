@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
 from app.core.config import get_settings
-from app.orchestrator.graph import run_platform_turn
+from app.orchestrator.registry import run_platform_turn
 from app.repositories.chat_repository import append_message, persist_workflow_run, resolve_thread
 from app.schemas.chat import ChatRequest, ChatResponse
 
@@ -18,7 +18,11 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 @router.post("", response_model=ChatResponse)
 async def chat(req: ChatRequest, session: AsyncSession = Depends(get_db)) -> ChatResponse:
     settings = get_settings()
-    state = await run_platform_turn(req.message, notify_channels=req.notify_channels or [])
+    state = await run_platform_turn(
+        req.message,
+        notify_channels=req.notify_channels or [],
+        orchestrator=req.orchestrator,
+    )
     response = ChatResponse(
         intent=state.get("intent", ""),
         plan=state.get("plan", ""),
@@ -62,7 +66,11 @@ async def chat_stream(req: ChatRequest):
     """Streams after full graph completion (MVP). Persistence hooks land on non-stream path first."""
 
     async def gen():
-        state = await run_platform_turn(req.message, notify_channels=req.notify_channels or [])
+        state = await run_platform_turn(
+            req.message,
+            notify_channels=req.notify_channels or [],
+            orchestrator=req.orchestrator,
+        )
         text = state.get("final", "")
         step = max(len(text) // 80, 24)
         for i in range(0, len(text), step):
