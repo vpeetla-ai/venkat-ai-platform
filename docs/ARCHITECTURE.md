@@ -31,6 +31,19 @@ VAP ships **three LangGraph orchestrators** — auto-routed by Chief intent or f
 
 Registry: `backend/app/orchestrator/registry.py`
 
+```mermaid
+flowchart TB
+    subgraph Platform["platform orchestrator"]
+        P1["chief → planner → workers → insight → critic → notify"]
+    end
+    subgraph Research["research orchestrator"]
+        R1["scope → recon → gap → ReAct → synthesize → reflection → notify"]
+    end
+    subgraph Architecture["architecture orchestrator"]
+        A1["scope → specialists → plan-execute → synthesize → reflection → critic → notify"]
+    end
+```
+
 ## Loop engineering patterns
 
 Reusable modules in `backend/app/agents/loops/`:
@@ -59,6 +72,34 @@ All strategies in `backend/app/memory/rag_strategies.py` — exposed via `GET /r
 Ingest parent-doc RAG: include `metadata.parent_id` and `metadata.parent_text` in `POST /ingest` chunks.
 
 Details: [docs/RAG_ARCHITECTURES.md](RAG_ARCHITECTURES.md)
+
+```mermaid
+flowchart LR
+    Q["User query"] --> N["naive"]
+    Q --> H["hybrid"]
+    Q --> M["multi_query"]
+    Q --> HY["hyde"]
+    Q --> RR["rerank"]
+    Q --> PD["parent_document"]
+    N & H & M & HY & RR & PD --> QD["Qdrant"]
+```
+
+## AegisAI gateway integration
+
+```mermaid
+sequenceDiagram
+    participant N as notifications.deliver_report
+    participant G as aegis_gateway.authorize_notification
+    participant A as AegisAI /api/gateway/tool-request
+    participant C as Slack/Telegram/WhatsApp
+    N->>G: per channel
+    G->>A: tool_name notify.*
+    A-->>G: allow / approval_required / deny
+    G-->>N: GatewayAuthz
+    N->>C: send if allowed
+```
+
+Config: `AEGISAI_API_BASE_URL`, `AEGISAI_AGENT_ID=venkat-ai-platform`, `AEGISAI_PRINCIPAL_ID=vap-orchestrator`. See [ECOSYSTEM.md](ECOSYSTEM.md).
 
 ## LangGraph flow (platform orchestrator)
 
@@ -113,7 +154,7 @@ Source: `backend/app/orchestrator/graph.py`
 | **MeetingBriefAgent** | LLM + optional file | `MEETING_CONTEXT_PATH` |
 | **ExperimentAgent** | LLM | Eval design patterns |
 
-Worker bundle selection: `backend/app/orchestrator/workers.py` (`workers_for_intent`).
+Worker bundle selection: `backend/app/orchestrator/graph.py` (`SPECIALISTS` dict).
 
 ## Production hardening (in-repo)
 
@@ -145,7 +186,7 @@ VAP answers **what agents should do**. For **what agents are allowed to do** (ga
 |------------|-----|---------|
 | Orchestration | ✅ | — |
 | LLM critic before notify | ✅ | — |
-| Approval gateway / resume | — | ✅ |
+| Gateway-wrapped notify | ✅ | HITL queue + resume |
 | Tool intercept + FinOps | — | ✅ |
 
 ## Phase mapping (honest status)
@@ -162,7 +203,7 @@ VAP answers **what agents should do**. For **what agents are allowed to do** (ga
 | 8 Enterprise | 🟡 Salesforce stub route only |
 | 9 Content engine | ✅ ContentAgent for `news_learning` |
 | 10 Advanced | ❌ Voice, marketplace, MCP — future |
-| 11 Governance integration | 🟡 Documented in ECOSYSTEM.md — code wiring planned |
+| 11 Governance integration | ✅ Notify via `app/integrations/aegis_gateway.py` |
 
 ## Data ingestion
 

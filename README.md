@@ -70,6 +70,45 @@ curl -X POST http://localhost:8000/orchestrators/research/run \
 
 [RAG architectures](docs/RAG_ARCHITECTURES.md) · [Full architecture](docs/ARCHITECTURE.md)
 
+### Orchestrator routing
+
+```mermaid
+flowchart LR
+    USER["POST /chat"] --> CHIEF["Chief classify"]
+    CHIEF -->|"deep_research"| RES["research orchestrator"]
+    CHIEF -->|"architecture_review"| ARCH["architecture orchestrator"]
+    CHIEF -->|"other intents"| PLAT["platform orchestrator"]
+    FORCE["POST /orchestrators/{id}/run"] --> RES
+    FORCE --> ARCH
+    FORCE --> PLAT
+```
+
+### Deep Research pipeline
+
+```mermaid
+flowchart LR
+    SCOPE["Scope"] --> RECON["Recon<br/>web + RAG strategies"]
+    RECON --> GAP["Gap analyst"]
+    GAP --> REACT["ReAct loop"]
+    REACT --> SYN["Synthesize"]
+    SYN --> REFL["Reflection loop"]
+    REFL --> OUT["Report + notify"]
+```
+
+### AegisAI gateway (notify)
+
+When `AEGISAI_API_BASE_URL` is set, delivery channels request authorization before sending:
+
+```mermaid
+sequenceDiagram
+    participant VAP as VAP notify node
+    participant GW as AegisAI Gateway
+    participant CH as Slack/Telegram/WhatsApp
+    VAP->>GW: POST /api/gateway/tool-request
+    GW-->>VAP: allow + token / approval_required / deny
+    VAP->>CH: deliver only if allowed
+```
+
 ---
 
 ## 60-second overview
@@ -93,14 +132,25 @@ flowchart TB
 
     subgraph API["FastAPI backend"]
         CHAT["POST /chat"]
-        ING["POST /ingest"]
-        LG["LangGraph orchestrator"]
+        ORCH["GET /orchestrators"]
+        ING["POST /ingest · /rag"]
+        REG["Orchestrator registry"]
     end
 
+    subgraph Orch["Three LangGraph pipelines"]
+        PLAT["platform"]
+        RES["research"]
+        ARCH["architecture"]
+    end
+
+    subgraph Gov["Governance (optional)"]
+        AEGIS["AegisAI Gateway<br/>notify authorization"]
+    end
     subgraph Agents["Agent library"]
         CHIEF["Chief — intent routing"]
         PLAN["Planner — execution plan"]
         WORK["Parallel workers<br/>Web · RAG · Code · Market…"]
+        LOOPS["Loop patterns<br/>ReAct · Reflection · Plan-Execute"]
         INS["Insight — synthesis"]
         CRT["Critic — QA guardrails"]
         DEL["Notify — delivery"]
@@ -120,18 +170,24 @@ flowchart TB
         MSG["Slack · Telegram · Twilio WhatsApp"]
     end
 
-    UI --> CHAT --> LG
-    LG --> CHIEF --> PLAN --> WORK
+    UI --> CHAT --> REG
+    REG --> PLAT & RES & ARCH
+    PLAT --> CHIEF
+    CHIEF --> PLAN --> WORK --> LOOPS
     WORK --> INS --> CRT --> DEL
     WORK --> QD
-    WORK --> PC
-    LG --> PG
     ING --> QD
+    PLAT --> PG
+    RES --> PG
+    ARCH --> PG
     WORK --> LLM
     WORK --> SRCH
-    LG -.-> OBS
-    DEL --> MSG
-    RD -.-> LG
+    PLAT -.-> OBS
+    RES -.-> OBS
+    ARCH -.-> OBS
+    DEL --> AEGIS
+    AEGIS --> MSG
+    RD -.-> REG
 ```
 
 ### LangGraph workflow (runtime — linear graph)
@@ -158,7 +214,10 @@ flowchart LR
 | `news_learning` | Web + NewsResearch + optional LinkedIn draft |
 | `prototype_idea` | Web + PrototypeBuilder + Code |
 | `market_analysis` | Web + MarketIntelligence *(not financial advice)* |
-| `rag_query` | Web + Knowledge (Qdrant) |
+| `rag_query` | Web + Knowledge (hybrid RAG) |
+| `rag_expert` | All 6 RAG strategies compared |
+| `deep_research` | → **research** orchestrator |
+| `architecture_review` | → **architecture** orchestrator |
 | `enterprise_api` | Web + API integration patterns |
 | `security_review` | SecurityReviewAgent — STRIDE checklist |
 | `compliance` | ComplianceAgent — licensing / privacy flags |
@@ -224,7 +283,9 @@ venkat-ai-platform/
 ├── frontend/           # Next.js — chat, dashboard, monitor, settings
 ├── backend/
 │   ├── app/agents/     # Chief, Planner, Web, Knowledge, Critic, …
-│   ├── app/orchestrator/  # LangGraph graph.py
+│   ├── app/orchestrator/  # platform · research · architecture graphs
+│   ├── app/integrations/  # AegisAI gateway client
+│   ├── app/agents/loops/  # ReAct · Reflection · Plan-Execute
 │   ├── alembic/        # Postgres migrations
 │   └── app/worker/     # ARQ scheduled jobs
 ├── docs/               # Principal architect design docs + ADRs
@@ -239,7 +300,9 @@ venkat-ai-platform/
 | Document | Purpose |
 |----------|---------|
 | [PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) | Tradeoffs, risks, cost, scale — publication-ready |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Runtime architecture + agent catalog |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Runtime architecture + mermaid diagrams |
+| [RAG_ARCHITECTURES.md](docs/RAG_ARCHITECTURES.md) | Six retrieval patterns |
+| [ECOSYSTEM.md](docs/ECOSYSTEM.md) | VAP ↔ AegisAI pairing |
 | [PRIMARY_REQUIREMENT_MEMORY.md](docs/PRIMARY_REQUIREMENT_MEMORY.md) | Durable charter for humans + agents |
 
 ---

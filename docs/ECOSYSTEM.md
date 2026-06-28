@@ -11,17 +11,24 @@ This document aligns **[Venkat AI Platform (VAP)](https://github.com/vpeetla-ai/
 | **What should agents do?** | **This repo (VAP)** | LangGraph orchestration — Chief routes intent, workers run in parallel, Critic reviews output |
 | **What are agents allowed to do?** | [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) | Governance control plane — AI Gateway, policy, HITL, signed audit, FinOps |
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│  Venkat AI Platform (VAP)  ← you are here                   │
-│  Chief → Planner → Workers → Insight → Critic → Notify      │
-└───────────────────────────┬─────────────────────────────────┘
-                            │ side-effecting tool calls (target)
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│  AegisAI                                                    │
-│  POST /api/gateway/tool-request → policy → HITL → execute   │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph VAP["Venkat AI Platform"]
+        O1["3 orchestrators"]
+        O2["6 RAG strategies"]
+        O3["Loop patterns"]
+        N["notify node"]
+    end
+    subgraph AegisAI["AegisAI control plane"]
+        GW["AI Gateway"]
+        REG["Agent registry"]
+        HITL["HITL queue"]
+        AUD["Signed audit"]
+    end
+    N -->|"notify.* tools"| GW
+    GW --> REG
+    GW --> HITL
+    GW --> AUD
 ```
 
 **Today:** Slack/Telegram/WhatsApp delivery goes through AegisAI when `AEGISAI_API_BASE_URL` is configured (`app/integrations/aegis_gateway.py`). Each notify channel requests `POST /api/gateway/tool-request` before sending.
