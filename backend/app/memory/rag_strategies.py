@@ -16,6 +16,7 @@ class RagStrategy(str, Enum):
     PARENT_DOCUMENT = "parent_document"
     RERANK = "rerank"
     HYDE = "hyde"
+    ENTERPRISE = "enterprise"
 
 
 ALL_STRATEGIES: tuple[RagStrategy, ...] = tuple(RagStrategy)
@@ -97,6 +98,15 @@ async def _llm_rerank(query: str, hits: list[dict], limit: int) -> list[dict]:
 
 async def retrieve(strategy: RagStrategy, query: str, limit: int = 5) -> list[dict]:
     """Run a specific RAG retrieval architecture."""
+    if strategy == RagStrategy.ENTERPRISE:
+        from app.integrations.enterprise_rag import enterprise_rag_enabled, retrieve_chunks
+
+        if enterprise_rag_enabled():
+            hits = await retrieve_chunks(query, limit=limit)
+            if hits:
+                return hits
+        return await search(query, limit=limit)
+
     if strategy == RagStrategy.NAIVE:
         return await search(query, limit=limit)
 

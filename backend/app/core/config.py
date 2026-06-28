@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     def coerce_gateway_flags(cls, value: object) -> bool:
         return Settings._bool(value)
 
+    @field_validator("enterprise_rag_enabled", mode="before")
+    @classmethod
+    def coerce_enterprise_rag_flag(cls, value: object) -> bool:
+        return Settings._bool(value)
+
     app_env: str = "development"
     backend_cors_origins: str = "http://localhost:3000"
 
@@ -100,6 +105,17 @@ class Settings(BaseSettings):
     aegisai_principal_id: str = "vap-orchestrator"
     aegisai_auth_bearer: str | None = None
     aegisai_roles: str = "workflow_owner,execution_broker"
+
+    # Enterprise RAG Platform (optional governed knowledge layer)
+    enterprise_rag_enabled: bool = False
+    enterprise_rag_api_base_url: str | None = None
+    enterprise_rag_api_key: str | None = None
+    enterprise_rag_tenant_id: str = "acme"
+    enterprise_rag_user_id: str = "vap-orchestrator"
+    enterprise_rag_groups: str = "engineering,ai-platform"
+
+    def enterprise_rag_groups_list(self) -> list[str]:
+        return [g.strip() for g in self.enterprise_rag_groups.split(",") if g.strip()]
 
 
 @lru_cache

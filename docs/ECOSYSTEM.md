@@ -87,7 +87,7 @@ Full matrix: [AegisAI ECOSYSTEM.md](https://github.com/vpeetla-ai/aegisai-enterp
 |------|--------------|
 | [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) | Governance layer for VAP tool calls |
 | [ai-content-factory](https://github.com/vpeetla-ai/ai-content-factory) | Application-layer content automation |
-| [enterprise_rag_platform](https://github.com/vpeetla-ai/enterprise_rag_platform) | Enterprise RAG patterns (VAP uses Qdrant RAG in-app) |
+| [enterprise_rag_platform](https://github.com/vpeetla-ai/enterprise_rag_platform) | Governed knowledge layer — VAP `enterprise` RAG strategy calls `/v1/retrieve` |
 
 ---
 

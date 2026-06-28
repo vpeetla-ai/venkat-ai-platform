@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Shell } from "@/components/shell";
 import { Providers } from "./providers";
+import { profile } from "@/lib/portfolio";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,8 +16,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Venkat AI Platform",
-  description: "Multi-agent orchestration for research, prototypes, markets, and delivery",
+  title: {
+    default: `${profile.name} | ${profile.title}`,
+    template: `%s | ${profile.name}`,
+  },
+  description: profile.headline,
+  openGraph: {
+    title: `${profile.name} | Principal AI Engineer, AI Architect`,
+    description: profile.headline,
+    url: profile.site,
+    siteName: profile.name,
+    type: "website",
+  },
 };
 
 export default function RootLayout({
