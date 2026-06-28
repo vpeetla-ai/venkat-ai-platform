@@ -30,6 +30,15 @@ class Settings(BaseSettings):
     def coerce_enterprise_rag_flag(cls, value: object) -> bool:
         return Settings._bool(value)
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_database_url(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+        if value.startswith("postgresql://") and "+asyncpg" not in value:
+            return value.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return value
+
     app_env: str = "development"
     backend_cors_origins: str = "http://localhost:3000"
 
@@ -51,6 +60,7 @@ class Settings(BaseSettings):
     enable_db_persistence: bool = True
 
     qdrant_url: str = "http://localhost:6333"
+    qdrant_api_key: str | None = None
     qdrant_collection: str = "vap_documents"
 
     pinecone_api_key: str | None = None

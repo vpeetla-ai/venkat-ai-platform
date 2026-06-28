@@ -19,7 +19,10 @@ npx vercel alias set <deployment-url> venkat-ai-platform.vercel.app
 
 1. Push `main` to GitHub.
 2. Render Dashboard → **New Blueprint** → connect `venkat-ai-platform` → apply `render.yaml`.
-3. Set secrets: `OPENROUTER_API_KEY`, optional `REDIS_URL`, `QDRANT_URL`.
+3. Set secrets (free-tier friendly):
+   - **Required:** `GROQ_API_KEY` (free LLM at [console.groq.com](https://console.groq.com))
+   - **Optional:** `REDIS_URL` (Upstash), `QDRANT_URL` + `QDRANT_API_KEY` (Qdrant Cloud)
+   - Or `OPENROUTER_API_KEY` instead of Groq if you prefer pay-as-you-go
 
 ## Local
 

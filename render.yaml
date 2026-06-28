@@ -18,9 +18,15 @@ services:
         fromDatabase:
           name: vap-postgres
           property: connectionString
+      - key: GROQ_API_KEY
+        sync: false
+      - key: LLM_DEFAULT_PROVIDER
+        value: groq
       - key: REDIS_URL
         sync: false
       - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
         sync: false
       - key: OPENROUTER_API_KEY
         sync: false

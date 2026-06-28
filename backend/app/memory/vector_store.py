@@ -10,7 +10,11 @@ from app.memory.pinecone_optional import upsert_vectors_async
 
 
 def _client() -> QdrantClient:
-    return QdrantClient(url=get_settings().qdrant_url)
+    settings = get_settings()
+    kwargs: dict = {"url": settings.qdrant_url}
+    if settings.qdrant_api_key:
+        kwargs["api_key"] = settings.qdrant_api_key
+    return QdrantClient(**kwargs)
 
 
 async def ensure_collection(vector_size: int = 1536) -> None:
