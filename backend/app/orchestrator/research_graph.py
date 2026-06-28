@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import uuid
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -29,6 +30,7 @@ class ResearchState(TypedDict, total=False):
     notify_channels: list[str]
     delivery: dict[str, bool]
     loop_round: int
+    audit_case_id: str
 
 
 async def node_research_scope(state: ResearchState) -> dict:
@@ -111,7 +113,10 @@ async def node_notify(state: ResearchState) -> dict:
     if not state.get("notify_channels"):
         return {"delivery": {}}
     title = "VAP Deep Research"
-    delivery = await deliver_report(title, state.get("final", ""), channels=state["notify_channels"])
+    delivery = await deliver_report(
+        "VAP Deep Research", state.get("final", ""), channels=state["notify_channels"],
+        case_id=state.get("audit_case_id"),
+    )
     return {"delivery": delivery}
 
 
@@ -149,12 +154,16 @@ def get_research_graph():
 
 
 async def run_research_turn(
-    user_message: str, notify_channels: list[str] | None = None
+    user_message: str,
+    notify_channels: list[str] | None = None,
+    *,
+    audit_case_id: str | None = None,
 ) -> ResearchState:
     graph = get_research_graph()
     init: ResearchState = {
         "user_message": user_message,
         "notify_channels": notify_channels or [],
         "outputs": {},
+        "audit_case_id": audit_case_id or str(uuid.uuid4()),
     }
     return await graph.ainvoke(init)

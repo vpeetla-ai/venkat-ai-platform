@@ -24,7 +24,16 @@ This document aligns **[Venkat AI Platform (VAP)](https://github.com/vpeetla-ai/
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Today:** VAP delivers notifications and external API calls directly. **Target:** route through AegisAI gateway for fleet-wide policy and audit.
+**Today:** Slack/Telegram/WhatsApp delivery goes through AegisAI when `AEGISAI_API_BASE_URL` is configured (`app/integrations/aegis_gateway.py`). Each notify channel requests `POST /api/gateway/tool-request` before sending.
+
+```bash
+AEGISAI_API_BASE_URL=https://aegisai-api.onrender.com
+AEGISAI_AGENT_ID=venkat-ai-platform
+AEGISAI_PRINCIPAL_ID=vap-orchestrator
+AEGISAI_GATEWAY_FAIL_OPEN=true   # direct delivery if gateway unreachable (local dev)
+```
+
+**Next:** ingest writes, ReAct tools, and ai-content-factory publish through the gateway.
 
 ---
 
@@ -32,13 +41,9 @@ This document aligns **[Venkat AI Platform (VAP)](https://github.com/vpeetla-ai/
 
 | Capability | In VAP today | Deferred to AegisAI |
 |------------|--------------|---------------------|
-| Intent routing (13 labels) | Chief agent | — |
-| Parallel specialist workers | asyncio bundles | — |
-| LLM critic before notify | Critic node | — |
-| Qdrant RAG + ingest | Yes | — |
-| Postgres thread persistence | Yes | — |
-| Langfuse spans | Yes | Cross-trace lineage |
-| Approval gateway / HITL resume | No | Gateway + HITL queue |
+| Intent routing (16 labels) | Chief agent | — |
+| Three orchestrators | platform / research / architecture | — |
+| Gateway-wrapped notifications | `aegis_gateway.py` | HITL queue UI for pending approvals |
 | OPA / RBAC policy engine | No | `platform/policy/aegisai.rego` |
 | Signed audit packets | No | Audit export API |
 | Agent registry lifecycle | No | Shadow → Approved |

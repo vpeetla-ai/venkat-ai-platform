@@ -1,6 +1,11 @@
+import logging
+
 import httpx
 
 from app.core.config import get_settings
+from app.integrations.aegis_gateway import authorize_notification, gateway_enabled
+
+logger = logging.getLogger(__name__)
 
 
 async def send_slack(text: str) -> bool:
@@ -46,8 +51,22 @@ async def send_whatsapp_twilio(text: str) -> bool:
         return r.is_success
 
 
-async def deliver_report(title: str, body: str, channels: list[str] | None = None) -> dict[str, bool]:
-    """channels: slack | telegram | whatsapp — default all configured."""
+_SENDERS = {
+    "slack": send_slack,
+    "telegram": send_telegram,
+    "whatsapp": send_whatsapp_twilio,
+}
+
+
+async def deliver_report(
+    title: str,
+    body: str,
+    channels: list[str] | None = None,
+    *,
+    case_id: str | None = None,
+    customer_impact: bool = False,
+) -> dict[str, bool]:
+    """Deliver to slack | telegram | whatsapp — gated by AegisAI when configured."""
     settings = get_settings()
     if channels is None:
         channels = []
@@ -66,6 +85,28 @@ async def deliver_report(title: str, body: str, channels: list[str] | None = Non
     text = f"*{title}*\n\n{body}" if "slack" in channels else f"{title}\n\n{body}"
     results: dict[str, bool] = {}
     for ch in channels:
+        sender = _SENDERS.get(ch)
+        if sender is None:
+            results[ch] = False
+            continue
+
+        if gateway_enabled():
+            authz = await authorize_notification(
+                ch, case_id=case_id, customer_impact=customer_impact
+            )
+            if authz.blocked:
+                logger.info("AegisAI blocked %s delivery: %s", ch, authz.reason)
+                results[ch] = False
+                continue
+            if authz.requires_approval:
+                logger.info("AegisAI HITL pending for %s: %s", ch, authz.reason)
+                results[ch] = False
+                continue
+            if not authz.allowed:
+                logger.info("AegisAI denied %s (decision=%s)", ch, authz.decision)
+                results[ch] = False
+                continue
+
         if ch == "slack":
             results["slack"] = await send_slack(text)
         elif ch == "telegram":

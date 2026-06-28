@@ -44,7 +44,8 @@ VAP is a **multi-agent orchestration platform** with:
 | Automated test suite | ✅ `pytest` in `backend/tests/` |
 | Postgres thread persistence | ✅ |
 | Pinecone | 🟡 Ingest mirror only |
-| Approval gateway / HITL | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) |
+| AegisAI gateway (notify) | ✅ When `AEGISAI_API_BASE_URL` set — see [ECOSYSTEM.md](docs/ECOSYSTEM.md) |
+| Approval gateway / HITL UI | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) for full queue |
 
 **What VAP is not:** an enterprise governance control plane. For policy, HITL queues, signed audit, and fleet registry, use [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform).
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from collections.abc import Awaitable, Callable
 from typing import Any
 
@@ -60,6 +61,7 @@ async def run_platform_turn(
 ) -> dict[str, Any]:
     """Route to the right orchestrator by explicit id or chief intent."""
     orch_id = orchestrator
+    audit_case_id = str(uuid.uuid4())
     if orch_id is None:
         intent = await classify_intent(user_message)
         orch_id = INTENT_ORCHESTRATOR.get(intent, "platform")
@@ -67,7 +69,7 @@ async def run_platform_turn(
         intent = ""
 
     runner = ORCHESTRATORS.get(orch_id, run_platform_graph_turn)
-    state = await runner(user_message, notify_channels)
+    state = await runner(user_message, notify_channels, audit_case_id=audit_case_id)
     if intent and not state.get("intent"):
         state["intent"] = intent
     return state

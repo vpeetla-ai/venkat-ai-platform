@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 from collections.abc import Awaitable, Callable
 from typing import TypedDict
 
@@ -68,6 +69,7 @@ class VState(TypedDict, total=False):
     final: str
     notify_channels: list[str]
     delivery: dict[str, bool]
+    audit_case_id: str
 
 
 async def node_chief(state: VState) -> dict:
@@ -140,7 +142,9 @@ async def node_notify(state: VState) -> dict:
         return {"delivery": {}}
     title = f"VAP report — {state.get('intent', 'general')}"
     body = state.get("final", "")
-    delivery = await deliver_report(title, body, channels=state["notify_channels"])
+    delivery = await deliver_report(
+        title, body, channels=state["notify_channels"], case_id=state.get("audit_case_id")
+    )
     return {"delivery": delivery}
 
 
@@ -178,13 +182,17 @@ def get_compiled_graph():
 
 
 async def run_platform_graph_turn(
-    user_message: str, notify_channels: list[str] | None = None
+    user_message: str,
+    notify_channels: list[str] | None = None,
+    *,
+    audit_case_id: str | None = None,
 ) -> VState:
     graph = get_compiled_graph()
     init: VState = {
         "user_message": user_message,
         "notify_channels": notify_channels or [],
         "outputs": {},
+        "audit_case_id": audit_case_id or str(uuid.uuid4()),
     }
     return await graph.ainvoke(init)
 

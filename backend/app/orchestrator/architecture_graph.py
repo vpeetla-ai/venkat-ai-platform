@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import uuid
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -29,6 +30,7 @@ class ArchitectureState(TypedDict, total=False):
     final: str
     notify_channels: list[str]
     delivery: dict[str, bool]
+    audit_case_id: str
 
 
 async def node_arch_scope(state: ArchitectureState) -> dict:
@@ -116,6 +118,7 @@ async def node_notify(state: ArchitectureState) -> dict:
         "VAP Architecture Review",
         state.get("final", ""),
         channels=state["notify_channels"],
+        case_id=state.get("audit_case_id"),
     )
     return {"delivery": delivery}
 
@@ -154,12 +157,16 @@ def get_architecture_graph():
 
 
 async def run_architecture_turn(
-    user_message: str, notify_channels: list[str] | None = None
+    user_message: str,
+    notify_channels: list[str] | None = None,
+    *,
+    audit_case_id: str | None = None,
 ) -> ArchitectureState:
     graph = get_architecture_graph()
     init: ArchitectureState = {
         "user_message": user_message,
         "notify_channels": notify_channels or [],
         "outputs": {},
+        "audit_case_id": audit_case_id or str(uuid.uuid4()),
     }
     return await graph.ainvoke(init)

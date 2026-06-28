@@ -20,6 +20,11 @@ class Settings(BaseSettings):
     def coerce_bool_flags(cls, value: object) -> bool:
         return Settings._bool(value)
 
+    @field_validator("aegisai_gateway_enabled", "aegisai_gateway_fail_open", mode="before")
+    @classmethod
+    def coerce_gateway_flags(cls, value: object) -> bool:
+        return Settings._bool(value)
+
     app_env: str = "development"
     backend_cors_origins: str = "http://localhost:3000"
 
@@ -85,6 +90,16 @@ class Settings(BaseSettings):
     model_structured: str = "openai/gpt-4o-mini"
     model_fast: str = "mistralai/mistral-7b-instruct"
     model_code: str = "openai/gpt-4o-mini"
+
+    # AegisAI governance gateway (optional — direct delivery when unset)
+    aegisai_api_base_url: str | None = None
+    aegisai_gateway_enabled: bool = True
+    aegisai_gateway_fail_open: bool = True
+    aegisai_agent_id: str = "venkat-ai-platform"
+    aegisai_tenant_id: str = "bank-demo"
+    aegisai_principal_id: str = "vap-orchestrator"
+    aegisai_auth_bearer: str | None = None
+    aegisai_roles: str = "workflow_owner,execution_broker"
 
 
 @lru_cache
