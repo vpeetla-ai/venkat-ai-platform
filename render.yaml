@@ -1,0 +1,33 @@
+# Render Blueprint — Venkat AI Platform API (free tier)
+services:
+  - type: web
+    name: vap-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: BACKEND_CORS_ORIGINS
+        value: https://venkat-ai-platform.vercel.app,https://venkat-ai.com,https://www.venkat-ai.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vap-postgres
+          property: connectionString
+      - key: REDIS_URL
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: ENABLE_DB_PERSISTENCE
+        value: "true"
+
+databases:
+  - name: vap-postgres
+    plan: free
+    region: oregon

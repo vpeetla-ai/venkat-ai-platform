@@ -1,4 +1,9 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (typeof window !== "undefined" &&
+  !["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? "/api"
+    : "http://localhost:8000");
 
 export type ChatResponse = {
   thread_id?: string | null;

@@ -1,5 +1,6 @@
 # Venkat AI Platform (VAP)
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://venkat-ai-platform.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-purple)](https://langchain-ai.github.io/langgraph/)
 [![Stack](https://img.shields.io/badge/RAG-Qdrant%20primary-blue)](https://qdrant.tech/)
@@ -8,7 +9,7 @@
 
 > A portfolio-grade reference for **LangGraph orchestration**, **multi-LLM routing**, **Qdrant RAG** (optional Pinecone ingest mirror), **Langfuse observability**, and **production persistence** — with publication-ready ADRs and design docs.
 
-[📖 Principal design doc](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) · [🏗 Architecture catalog](docs/ARCHITECTURE.md) · [🔗 Ecosystem map](docs/ECOSYSTEM.md) · [📋 Charter / memory](docs/PRIMARY_REQUIREMENT_MEMORY.md)
+[▶ Live demo](https://venkat-ai-platform.vercel.app) · [📖 Principal design doc](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) · [🏗 Architecture catalog](docs/ARCHITECTURE.md) · [🔗 Ecosystem map](docs/ECOSYSTEM.md) · [🚀 Deploy guide](docs/LIVE_DEMO.md)
 
 ---
 

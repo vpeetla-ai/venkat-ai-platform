@@ -1,0 +1,17 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci",
+  "build": {
+    "env": {
+      "NODE_VERSION": "20",
+      "NEXT_PUBLIC_API_URL": "/api"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://vap-api.onrender.com/:path*"
+    }
+  ]
+}
