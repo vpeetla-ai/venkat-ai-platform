@@ -2,13 +2,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-purple)](https://langchain-ai.github.io/langgraph/)
-[![Stack](https://img.shields.io/badge/RAG-Qdrant%20%2B%20Pinecone-blue)]()
+[![Stack](https://img.shields.io/badge/RAG-Qdrant%20primary-blue)](https://qdrant.tech/)
 
 **Principal-architect multi-agent operating system** — Chief routes intent, specialist agents run in parallel, Critic guards output, notifications fan out to Slack, Telegram, and WhatsApp.
 
-> A portfolio-grade reference for **LangGraph orchestration**, **multi-LLM routing**, **dual-vector RAG**, **Langfuse observability**, and **production persistence** — with publication-ready ADRs and design docs.
+> A portfolio-grade reference for **LangGraph orchestration**, **multi-LLM routing**, **Qdrant RAG** (optional Pinecone ingest mirror), **Langfuse observability**, and **production persistence** — with publication-ready ADRs and design docs.
 
-[📖 Principal design doc](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) · [🏗 Architecture catalog](docs/ARCHITECTURE.md) · [📋 Charter / memory](docs/PRIMARY_REQUIREMENT_MEMORY.md)
+[📖 Principal design doc](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) · [🏗 Architecture catalog](docs/ARCHITECTURE.md) · [🔗 Ecosystem map](docs/ECOSYSTEM.md) · [📋 Charter / memory](docs/PRIMARY_REQUIREMENT_MEMORY.md)
 
 ---
 
@@ -22,11 +22,33 @@ VAP is a **multi-agent orchestration platform** with:
 |------------|----------------|
 | Intent routing | Chief orchestrator — 13+ intent labels |
 | Parallel evidence | asyncio worker bundles per intent |
-| RAG | Qdrant primary + optional Pinecone dual-write |
-| QA gate | CriticAgent before external delivery |
+| RAG | Qdrant primary + optional Pinecone ingest mirror |
+| QA gate | CriticAgent (LLM review) before external delivery |
 | Persistence | Postgres threads, messages, workflow runs |
 | Schedules | Redis + ARQ cron for daily briefs |
 | Observability | Langfuse spans on critical nodes |
+
+---
+
+## Implementation status (honest)
+
+| Component | Status |
+|-----------|--------|
+| LangGraph orchestrator (9 linear nodes) | ✅ |
+| Chief intent routing (13 labels) | ✅ |
+| Parallel asyncio worker bundles | ✅ |
+| Qdrant RAG + `POST /ingest` | ✅ |
+| Pinecone | 🟡 Ingest mirror only — reads from Qdrant |
+| Postgres thread persistence | ✅ |
+| ARQ scheduled daily brief | ✅ |
+| Langfuse spans | ✅ |
+| Chat UI (`/chat`) | ✅ |
+| Dashboard / Monitor pages | 🟡 Placeholder shells |
+| Approval gateway / HITL resume | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) |
+| AegisAI gateway integration | 🟡 Documented — not wired in code yet |
+| Automated test suite / CI | ❌ Planned |
+
+**What VAP is not:** an enterprise governance control plane. For policy, HITL queues, signed audit, and fleet registry, use [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform).
 
 ---
 
@@ -92,20 +114,20 @@ flowchart TB
     RD -.-> LG
 ```
 
-### LangGraph workflow (runtime)
+### LangGraph workflow (runtime — linear graph)
+
+The graph is **sequential** (no conditional edges). `content_extra` only drafts LinkedIn/blog copy when `intent == news_learning`; otherwise it passes through.
 
 ```mermaid
 flowchart LR
-    START((Start)) --> CHIEF["Chief<br/>classify intent"]
-    CHIEF --> PLAN["Planner<br/>human-readable plan"]
-    PLAN --> WORKERS["Workers ∥<br/>Web + specialists"]
-    WORKERS --> CONTENT{"Content extra?<br/>news_learning"}
-    CONTENT -->|"yes"| DRAFT["LinkedIn / blog draft"]
-    CONTENT -->|"no"| INSIGHT
-    DRAFT --> INSIGHT["Insight<br/>synthesis"]
-    INSIGHT --> CRITIC["Critic<br/>policy + hallucination"]
-    CRITIC --> COMPOSE["Compose response"]
-    COMPOSE --> NOTIFY["Notify<br/>Slack · TG · WA"]
+    START((Start)) --> CHIEF["Chief"]
+    CHIEF --> PLAN["Planner"]
+    PLAN --> WORKERS["Workers ∥"]
+    WORKERS --> CONTENT["content_extra"]
+    CONTENT --> INSIGHT["Insight"]
+    INSIGHT --> CRITIC["Critic"]
+    CRITIC --> COMPOSE["Compose"]
+    COMPOSE --> NOTIFY["Notify"]
     NOTIFY --> END((End))
 ```
 
@@ -134,7 +156,7 @@ Full catalog: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 | LLM access | OpenRouter default | Swappable via env |
 | Embeddings | OpenAI / Cohere | `EMBEDDING_PROVIDER` |
 | Primary vector | Qdrant | Docker-friendly dev parity |
-| Secondary vector | Pinecone optional | Best-effort dual-write |
+| Secondary vector | Pinecone optional | Ingest mirror only — queries use Qdrant |
 | Persistence | Postgres + Alembic | Threads, messages, runs |
 | Jobs | Redis + ARQ | Scheduled daily brief |
 | Observability | Langfuse | Spans on chief / planner / critic |
@@ -210,9 +232,11 @@ Market and portfolio outputs are **informational only** — not investment advic
 
 ## Related projects
 
+See [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md) for how repos connect.
+
 | Project | Role |
 |---------|------|
-| [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) | Agent governance control plane — gateway + HITL |
+| [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) | Governance control plane — gateway + HITL (pair with VAP) |
 | [ai-content-factory](https://github.com/vpeetla-ai/ai-content-factory) | Content pipeline with HITL publish gate |
 | [enterprise_rag_platform](https://github.com/vpeetla-ai/enterprise_rag_platform) | Enterprise RAG governance patterns |
 
