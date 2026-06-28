@@ -10,6 +10,7 @@
 ```bash
 cd frontend
 npx vercel --prod
+npx vercel alias set <deployment-url> venkat-ai-platform.vercel.app
 ```
 
 `frontend/vercel.json` rewrites `/api/*` → Render `vap-api`. Set `NEXT_PUBLIC_API_URL=/api` in Vercel project env (already in vercel.json build env).
