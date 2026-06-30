@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, health, ingest, orchestrators, rag, threads, workflows
+from app.api.routes import a2a, chat, health, ingest, orchestrators, rag, threads, workflows
 from app.core.config import get_settings
 from app.db.session import dispose_engine, get_engine
 
@@ -40,6 +40,7 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
+app.include_router(a2a.router)
 app.include_router(chat.router)
 app.include_router(threads.router)
 app.include_router(ingest.router)

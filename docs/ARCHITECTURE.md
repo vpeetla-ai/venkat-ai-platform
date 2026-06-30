@@ -4,6 +4,7 @@
 
 - **Principal design document:** `docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md` (tradeoffs, risks, cost, scale).  
 - **Durable charter / “memory” anchor:** `docs/PRIMARY_REQUIREMENT_MEMORY.md` + `.cursor/rules/vap-principal-architect-bar.mdc`.
+- **Protocol stack (2026):** [MCP tool layer](MCP.md) · [Inference + vLLM lab](INFERENCE.md) · [A2A Agent Cards](A2A.md)
 
 ## Stack decisions (Principal AI Architect view)
 
