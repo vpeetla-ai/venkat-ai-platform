@@ -134,6 +134,7 @@ sequenceDiagram
 ```text
 User → Chief → Planner → Parallel Workers → Content → Insight → Critic → Notify
                                               ↘ Slack · Telegram · WhatsApp
+         ↘ Langfuse (system / trace / node spans + eval scores)
 ```
 
 ---
@@ -184,7 +185,7 @@ flowchart TB
     subgraph External["External services"]
         LLM["OpenRouter / OpenAI / Groq"]
         SRCH["Tavily · NewsAPI · Market APIs"]
-        OBS["Langfuse"]
+        OBS["Langfuse<br/>trace-linked evals"]
         MSG["Slack · Telegram · Twilio WhatsApp"]
     end
 

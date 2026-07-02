@@ -17,7 +17,7 @@
 | Secondary vector | Pinecone (optional) | Ingest mirror only — reads always from Qdrant |
 | Persistence | Postgres | `chat_threads`, `chat_messages`, `workflow_runs` |
 | Jobs | Redis + ARQ | Scheduled daily brief (`app/worker/settings.py`) |
-| Observability | Langfuse | Spans via `start_as_current_observation` |
+| Observability | Langfuse | Trace-linked spans on chief/planner/critic — [org spec](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/docs/TRACE_LINKED_OBSERVABILITY.md) |
 | Notifications | Slack / Telegram / Twilio WhatsApp | WhatsApp via Meta Cloud API can plug in similarly |
 
 ## Orchestrators (multi-pipeline)
@@ -101,6 +101,30 @@ sequenceDiagram
 ```
 
 Config: `AEGISAI_API_BASE_URL`, `AEGISAI_AGENT_ID=venkat-ai-platform`, `AEGISAI_PRINCIPAL_ID=vap-orchestrator`. See [ECOSYSTEM.md](ECOSYSTEM.md).
+
+## Observability (trace-linked LLMOps)
+
+```mermaid
+flowchart LR
+    subgraph Graph["LangGraph nodes"]
+        CH["chief"]
+        PL["planner"]
+        CR["critic"]
+    end
+    subgraph Levels["Evaluation levels"]
+        SYS["system · workflow.run"]
+        TR["trace · intent route"]
+        ND["node · agent step"]
+    end
+  subgraph Export["Langfuse Cloud"]
+        LF["traces + eval scores"]
+    end
+    CH & PL & CR --> ND
+    Graph --> TR --> SYS
+    SYS -.-> LF
+```
+
+Set `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` on Render. Package: `backend/app/vpeetla_observability/`.
 
 ## LangGraph flow (platform orchestrator)
 
