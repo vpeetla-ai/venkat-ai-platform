@@ -81,6 +81,14 @@ Full matrix: [AegisAI ECOSYSTEM.md](https://github.com/vpeetla-ai/aegisai-enterp
 
 ---
 
+## Observability
+
+Langfuse spans on chief, planner, and critic nodes. Set `LANGFUSE_*` in `.env` or Render — see [infra/README.md](../infra/README.md).
+
+Shared org pattern: [TRACE_LINKED_OBSERVABILITY](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/docs/TRACE_LINKED_OBSERVABILITY.md). Package synced at `backend/app/vpeetla_observability/` for future middleware wiring.
+
+---
+
 ## Sibling projects
 
 | Repo | Relationship |

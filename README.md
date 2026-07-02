@@ -3,7 +3,7 @@
 
 
 <!-- vpeetla-tech-stack:start -->
-[![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square)]() [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square)]() [![LangGraph](https://img.shields.io/badge/LangGraph-9333EA?style=flat-square)]() [![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square)]() [![Qdrant](https://img.shields.io/badge/Qdrant-DC382D?style=flat-square)]() [![Postgres](https://img.shields.io/badge/Postgres-4169E1?style=flat-square)]() [![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square)]() [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square)]() [![Render](https://img.shields.io/badge/Render-46E3B7?style=flat-square)]()
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square)]() [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square)]() [![LangGraph](https://img.shields.io/badge/LangGraph-9333EA?style=flat-square)]() [![Langfuse](https://img.shields.io/badge/Langfuse-6366F1?style=flat-square)]() [![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square)]() [![Qdrant](https://img.shields.io/badge/Qdrant-DC382D?style=flat-square)]() [![Postgres](https://img.shields.io/badge/Postgres-4169E1?style=flat-square)]() [![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square)]() [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square)]() [![Render](https://img.shields.io/badge/Render-46E3B7?style=flat-square)]()
 <!-- vpeetla-tech-stack:end -->
 ## Agent skills (Cursor + Codex)
 
@@ -60,6 +60,7 @@ VAP is a **multi-agent orchestration platform** with:
 | Loop pattern agents | ✅ ReAct, Reflection, Plan-Execute |
 | Automated test suite | ✅ `pytest` in `backend/tests/` |
 | Postgres thread persistence | ✅ |
+| Langfuse spans (chief/planner/critic) | ✅ | Set `LANGFUSE_*` — [infra/README.md](infra/README.md) |
 | Pinecone | 🟡 Ingest mirror only |
 | AegisAI gateway (notify) | ✅ When `AEGISAI_API_BASE_URL` set — see [ECOSYSTEM.md](docs/ECOSYSTEM.md) |
 | Approval gateway / HITL UI | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) for full queue |
