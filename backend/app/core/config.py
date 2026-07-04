@@ -42,6 +42,10 @@ class Settings(BaseSettings):
     app_env: str = "development"
     backend_cors_origins: str = "http://localhost:3000"
 
+    # API auth — gates the routes that cost an LLM call, write to the vector DB, or send
+    # a real notification (Slack/Telegram/WhatsApp). Unset = open (dev/demo).
+    vap_api_key: str | None = None
+
     database_url: str = "postgresql+asyncpg://vap:vap@localhost:5432/venkat_ai_platform"
     redis_url: str = "redis://localhost:6379/0"
 

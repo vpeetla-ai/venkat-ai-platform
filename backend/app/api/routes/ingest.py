@@ -1,12 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.api.deps import require_api_key
 from app.memory.vector_store import upsert_chunks
 from app.schemas.ingest import IngestRequest
 
 router = APIRouter(prefix="/ingest", tags=["rag"])
 
 
-@router.post("")
+@router.post("", dependencies=[Depends(require_api_key)])
 async def ingest(req: IngestRequest):
     ids = [c.id for c in req.chunks]
     texts = [c.text for c in req.chunks]

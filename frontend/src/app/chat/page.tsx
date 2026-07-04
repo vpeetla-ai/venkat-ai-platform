@@ -15,6 +15,7 @@ export default function ChatPage() {
     notifyWhatsapp,
     activeThreadId,
     setActiveThreadId,
+    apiKey,
   } = useSettingsStore();
 
   const channels = useMemo(() => {
@@ -27,7 +28,7 @@ export default function ChatPage() {
 
   const mutation = useMutation({
     mutationFn: () =>
-      postChat(input, channels.length ? channels : undefined, activeThreadId ?? undefined),
+      postChat(input, channels.length ? channels : undefined, activeThreadId ?? undefined, apiKey),
     onSuccess: (data) => {
       if (data.thread_id) {
         setActiveThreadId(data.thread_id);

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sse_starlette.sse import EventSourceResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_db
+from app.api.deps import get_db, require_api_key
 from app.core.config import get_settings
 from app.orchestrator.registry import run_platform_turn
 from app.repositories.chat_repository import append_message, persist_workflow_run, resolve_thread
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
-@router.post("", response_model=ChatResponse)
+@router.post("", response_model=ChatResponse, dependencies=[Depends(require_api_key)])
 async def chat(req: ChatRequest, session: AsyncSession = Depends(get_db)) -> ChatResponse:
     settings = get_settings()
     state = await run_platform_turn(
@@ -61,7 +61,7 @@ async def chat(req: ChatRequest, session: AsyncSession = Depends(get_db)) -> Cha
         return response
 
 
-@router.post("/stream")
+@router.post("/stream", dependencies=[Depends(require_api_key)])
 async def chat_stream(req: ChatRequest):
     """Streams after full graph completion (MVP). Persistence hooks land on non-stream path first."""
 

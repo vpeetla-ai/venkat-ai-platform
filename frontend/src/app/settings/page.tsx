@@ -12,6 +12,8 @@ export default function SettingsPage() {
     setNotifySlack,
     setNotifyTelegram,
     setNotifyWhatsapp,
+    apiKey,
+    setApiKey,
   } = useSettingsStore();
 
   return (
@@ -30,6 +32,19 @@ export default function SettingsPage() {
           value={defaultModelNote}
           onChange={(e) => setDefaultModelNote(e.target.value)}
         />
+      </label>
+      <label className="block space-y-2 text-sm">
+        <span className="text-zinc-300">API key (only if the backend requires one)</span>
+        <input
+          type="password"
+          className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-white outline-none focus:border-emerald-500"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="X-API-Key"
+        />
+        <span className="text-xs text-zinc-500">
+          Set VAP_API_KEY on the backend to require this. Stored in this browser only.
+        </span>
       </label>
       <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
         <p className="text-sm font-medium text-white">Notify channels (chat requests)</p>

@@ -19,6 +19,7 @@ export async function postChat(
   message: string,
   notifyChannels?: string[],
   threadId?: string | null,
+  apiKey?: string,
 ): Promise<ChatResponse> {
   const body: Record<string, unknown> = {
     message,
@@ -27,9 +28,11 @@ export async function postChat(
   if (threadId) {
     body.thread_id = threadId;
   }
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (apiKey) headers["X-API-Key"] = apiKey;
   const r = await fetch(`${API_BASE}/chat`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(body),
   });
   if (!r.ok) {
