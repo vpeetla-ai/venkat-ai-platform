@@ -143,6 +143,8 @@ User → Chief → Planner → Parallel Workers → Content → Insight → Crit
 
 ## Architecture
 
+Canonical: [`docs/diagrams/canonical-architecture.mmd`](docs/diagrams/canonical-architecture.mmd)
+
 ### System context
 
 ```mermaid

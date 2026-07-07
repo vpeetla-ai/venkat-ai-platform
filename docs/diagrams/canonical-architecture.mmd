@@ -1,0 +1,11 @@
+flowchart TB
+  UI["Next.js — Chat · Dashboard · Monitor"] --> API["FastAPI /chat · /rag"]
+  API --> REG["Orchestrator registry"]
+  REG --> PLAT["Platform graph"]
+  REG --> RES["Research graph"]
+  REG --> ARCH["Architecture graph"]
+  PLAT & RES & ARCH --> AGENTS["Chief · Planner · Workers · Critic"]
+  AGENTS --> LLM["OpenRouter / Groq / OpenAI"]
+  AGENTS --> RAG["7 RAG strategies<br/>incl. Enterprise RAG adapter"]
+  AGENTS --> GW["AegisAI gateway<br/>notify side effects"]
+  API --> DATA["Postgres · Qdrant · Redis"]
