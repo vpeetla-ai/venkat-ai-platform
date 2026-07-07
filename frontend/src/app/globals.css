@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --accent: #2dd4bf;
-  --accent-muted: rgb(45 212 191 / 0.12);
-  --surface: rgb(24 24 27 / 0.55);
+  --background: #f4f6fb;
+  --foreground: #0f172a;
+  --accent: #2563eb;
+  --accent-muted: rgb(37 99 235 / 0.1);
+  --surface: #ffffff;
 }
 
 @theme inline {
@@ -22,15 +22,18 @@ body {
 }
 
 ::selection {
-  background: rgb(45 212 191 / 0.25);
-  color: #fff;
+  background: rgb(37 99 235 / 0.15);
+  color: #0f172a;
 }
 
 .portfolio-hero {
   background:
-    radial-gradient(ellipse 80% 60% at 10% 0%, rgb(45 212 191 / 0.08), transparent 55%),
-    radial-gradient(ellipse 60% 50% at 90% 20%, rgb(139 92 246 / 0.06), transparent 50%),
-    linear-gradient(160deg, rgb(24 24 27 / 0.9), rgb(9 9 11 / 0.95));
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgb(37 99 235 / 0.06), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 90% 20%, rgb(13 148 136 / 0.05), transparent 50%),
+    linear-gradient(160deg, #ffffff, #f4f6fb);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
 }
 
 .portfolio-noise {
@@ -42,20 +45,20 @@ body {
   margin-bottom: 0.75rem;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #fafafa;
+  color: #0f172a;
 }
 
 .prose-portfolio p {
   margin-bottom: 1rem;
   line-height: 1.75;
-  color: #a1a1aa;
+  color: #475569;
 }
 
 .prose-portfolio ul {
   margin-bottom: 1rem;
   list-style: disc;
   padding-left: 1.25rem;
-  color: #a1a1aa;
+  color: #475569;
 }
 
 .prose-portfolio li {

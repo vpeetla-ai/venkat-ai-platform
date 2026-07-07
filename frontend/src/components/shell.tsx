@@ -22,10 +22,10 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className={`rounded-lg px-3 py-1.5 text-sm transition ${
+      className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
         active
-          ? "bg-zinc-800/80 font-medium text-white"
-          : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+          ? "bg-blue-50 text-blue-700"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
       }`}
     >
       {label}
@@ -35,21 +35,25 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const onPlatform = platformNav.some((n) => pathname.startsWith(n.href)) || pathname === "/settings";
+  const onPlatform =
+    platformNav.some((n) => pathname.startsWith(n.href)) || pathname === "/settings";
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-950 text-zinc-50">
-      <div className="portfolio-noise pointer-events-none fixed inset-0 opacity-[0.35]" aria-hidden />
-
-      <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4">
-          <Link href="/" className="group flex flex-col">
-            <span className="text-base font-semibold tracking-tight text-white group-hover:text-teal-50">
-              {profile.name}
-            </span>
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500">
-              {profile.title}
-            </span>
+    <div className="flex min-h-screen flex-col bg-[#f4f6fb] text-slate-900">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3">
+          <Link href="/" className="group flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-teal-600 text-xs font-bold text-white shadow-sm">
+              VP
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold tracking-tight text-slate-900 group-hover:text-blue-700">
+                {profile.name}
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                {profile.title}
+              </span>
+            </div>
           </Link>
 
           <nav className="flex flex-wrap items-center gap-1">
@@ -57,8 +61,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
             {portfolioNav.map((item) => (
               <NavLink key={item.href} href={item.href} label={item.label} />
             ))}
-            <span className="mx-1 hidden h-4 w-px bg-zinc-800 sm:block" aria-hidden />
-            <span className="hidden px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-600 sm:inline">
+            <span className="mx-1 hidden h-4 w-px bg-slate-200 sm:block" aria-hidden />
+            <span className="hidden px-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 sm:inline">
               Platform
             </span>
             {platformNav.map((item) => (
@@ -68,10 +72,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
         {onPlatform ? (
-          <div className="border-t border-zinc-900/80 bg-teal-950/20">
-            <p className="mx-auto max-w-6xl px-4 py-2 text-center text-xs text-teal-300/80">
+          <div className="border-t border-blue-100 bg-blue-50/80">
+            <p className="mx-auto max-w-6xl px-4 py-2 text-center text-xs text-blue-800/90">
               Live reference architecture demo —{" "}
-              <Link href="/architecture" className="underline underline-offset-2 hover:text-teal-200">
+              <Link href="/architecture" className="font-medium underline underline-offset-2 hover:text-blue-900">
                 read the architecture lens
               </Link>
             </p>
@@ -83,11 +87,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <footer className="relative border-t border-zinc-800/80 bg-zinc-950">
+      <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm font-medium text-zinc-300">{profile.name}</p>
-            <p className="mt-1 text-xs text-zinc-500">
+            <p className="text-sm font-medium text-slate-800">{profile.name}</p>
+            <p className="mt-1 text-xs text-slate-500">
               Principal AI Architect · Agentic systems · Enterprise modernization
             </p>
           </div>
@@ -96,7 +100,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               href={profile.links.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-400 transition hover:text-teal-400"
+              className="text-slate-500 transition hover:text-blue-600"
             >
               LinkedIn
             </a>
@@ -104,7 +108,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               href={profile.links.substack}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-400 transition hover:text-teal-400"
+              className="text-slate-500 transition hover:text-blue-600"
             >
               Substack
             </a>
@@ -112,7 +116,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               href={profile.links.medium}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-400 transition hover:text-teal-400"
+              className="text-slate-500 transition hover:text-blue-600"
             >
               Medium
             </a>
@@ -120,16 +124,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
               href={profile.links.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-400 transition hover:text-teal-400"
+              className="text-slate-500 transition hover:text-blue-600"
             >
               GitHub
             </a>
-            <Link href="/chat" className="text-zinc-400 transition hover:text-teal-400">
+            <Link href="/chat" className="text-slate-500 transition hover:text-blue-600">
               Platform demo
             </Link>
           </div>
         </div>
-        <p className="border-t border-zinc-900 pb-6 pt-4 text-center text-[11px] text-zinc-600">
+        <p className="border-t border-slate-100 pb-6 pt-4 text-center text-[11px] text-slate-400">
           Market and portfolio narratives are informational only — not investment or legal advice.
         </p>
       </footer>
