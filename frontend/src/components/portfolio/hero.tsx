@@ -36,16 +36,16 @@ export function PortfolioHero() {
 
           <div className="flex flex-wrap gap-3 pt-2">
             <Link
-              href="/architecture"
+              href="/chat"
               className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
-              Architecture lens
+              Run multi-agent workflow
             </Link>
             <Link
-              href="/writing"
+              href="/architecture"
               className="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
             >
-              Read latest essays
+              Architecture lens
             </Link>
             <a
               href={profile.links.linkedin}

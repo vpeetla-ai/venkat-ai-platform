@@ -30,7 +30,7 @@ export function ProductWorkbench({
     <div className="min-h-screen text-slate-900 [background:radial-gradient(ellipse_90%_55%_at_8%_-10%,rgba(37,99,235,0.12),transparent_55%),radial-gradient(ellipse_70%_45%_at_92%_0%,rgba(13,148,136,0.06),transparent_50%),#f4f6fb]">
       <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-          <div className="flex min-w-0 items-center gap-3">
+          <a href="/" className="flex min-w-0 items-center gap-3 no-underline text-inherit">
             <div
               className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-gradient-to-br from-blue-600 to-blue-800 text-[0.7rem] font-bold text-white shadow-sm"
               aria-hidden
@@ -45,7 +45,7 @@ export function ProductWorkbench({
                 {productName}
               </h1>
             </div>
-          </div>
+          </a>
           {headerActions ? <div className="flex shrink-0 items-center gap-3">{headerActions}</div> : null}
         </div>
         <div className="mx-auto max-w-6xl px-6 pb-0">
