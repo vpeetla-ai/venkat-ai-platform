@@ -2,21 +2,34 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArchitectOverview } from "@/components/portfolio/ArchitectOverview";
+import { ProductWorkbench } from "@/components/portfolio/ProductWorkbench";
 import { postChat } from "@/lib/api";
 import { useSettingsStore } from "@/lib/store";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://vap-api.onrender.com";
+
+const LAYERS = [
+  { tier: "L1", name: "Chat workbench", role: "Operator experience", components: ["Intent routing", "Thread memory", "Delivery toggles"] },
+  { tier: "L2", name: "Orchestration", role: "LangGraph workflows", components: ["Chief", "Planner", "Specialists", "Critic"] },
+  { tier: "L3", name: "Knowledge + notify", role: "RAG + channels", components: ["7 RAG strategies", "Slack/Telegram/WhatsApp", "AegisAI gateway"] },
+  { tier: "L4", name: "Ops", role: "Production proof", components: ["workflow_runs", "Observability", "/api/v1/ops/metrics"] },
+];
+
+const TRADEOFFS = [
+  { decision: "LangGraph over linear chains", gain: "Checkpoints, HITL, and multi-step enterprise workflows", trade: "Higher graph complexity than single-prompt UX" },
+  { decision: "Postgres workflow_runs", gain: "Live ops metrics without Langfuse dependency", trade: "Render Postgres vs pure static demo" },
+  { decision: "Gateway-wrapped notify channels", gain: "Side effects gated like production fleets", trade: "Extra hop through AegisAI for delivery" },
+  { decision: "Mock LLM on free tier", gain: "Always-on public demo", trade: "Response depth ≠ production models" },
+];
 
 export default function ChatPage() {
   const [input, setInput] = useState(
     "Summarize the AI agent orchestration patterns I should focus on this month.",
   );
-  const {
-    notifySlack,
-    notifyTelegram,
-    notifyWhatsapp,
-    activeThreadId,
-    setActiveThreadId,
-    apiKey,
-  } = useSettingsStore();
+  const { notifySlack, notifyTelegram, notifyWhatsapp, activeThreadId, setActiveThreadId, apiKey } =
+    useSettingsStore();
 
   const channels = useMemo(() => {
     const list: string[] = [];
@@ -30,94 +43,78 @@ export default function ChatPage() {
     mutationFn: () =>
       postChat(input, channels.length ? channels : undefined, activeThreadId ?? undefined, apiKey),
     onSuccess: (data) => {
-      if (data.thread_id) {
-        setActiveThreadId(data.thread_id);
-      }
+      if (data.thread_id) setActiveThreadId(data.thread_id);
     },
   });
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">AI Chat</h1>
-        <p className="text-sm text-zinc-400">
-          Messages route through Chief → Planner → specialist agents → Insight → Critic. Enable delivery
-          toggles in Settings to mirror finals to Slack / Telegram / WhatsApp.
-        </p>
-      </div>
-      <textarea
-        className="min-h-[140px] w-full rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <div className="flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={() => mutation.mutate()}
-          disabled={mutation.isPending}
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {mutation.isPending ? "Running agents…" : "Run workflow"}
-        </button>
-        {activeThreadId ? (
-          <button
-            type="button"
-            onClick={() => setActiveThreadId(null)}
-            className="rounded-lg border border-zinc-700 px-3 py-2 text-xs text-zinc-300 hover:border-zinc-500"
-          >
-            New thread
-          </button>
-        ) : null}
-        {activeThreadId ? (
-          <span className="text-xs text-zinc-500">Thread {activeThreadId}</span>
-        ) : null}
-      </div>
-      {mutation.error ? (
-        <p className="rounded-lg border border-red-900 bg-red-950/40 px-3 py-2 text-sm text-red-200">
-          {(mutation.error as Error).message}
-        </p>
-      ) : null}
-      {mutation.data ? (
-        <div className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 text-sm">
-          <div>
-            <p className="text-xs uppercase tracking-wide text-zinc-500">Intent</p>
-            <p className="text-white">{mutation.data.intent}</p>
+    <ProductWorkbench
+      eyebrow="Multi-agent orchestration OS"
+      productName="Venkat AI Platform"
+      subtitle="Chief → Planner → specialists → Insight → Critic. Enable delivery toggles in Settings to mirror finals to Slack, Telegram, or WhatsApp."
+      headerActions={
+        <Link href="/settings" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+          Settings
+        </Link>
+      }
+      productPanel={
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <textarea
+            className="min-h-[140px] w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => mutation.mutate()}
+              disabled={mutation.isPending}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+            >
+              {mutation.isPending ? "Running agents…" : "Run workflow"}
+            </button>
+            {activeThreadId ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setActiveThreadId(null)}
+                  className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                >
+                  New thread
+                </button>
+                <span className="text-xs text-slate-500">Thread {activeThreadId}</span>
+              </>
+            ) : null}
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide text-zinc-500">Planner</p>
-            <pre className="mt-1 whitespace-pre-wrap text-zinc-300">{mutation.data.plan}</pre>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide text-zinc-500">Specialist outputs</p>
-            <div className="mt-2 space-y-3">
-              {Object.entries(mutation.data.outputs).map(([k, v]) => (
-                <details key={k} className="rounded-lg border border-zinc-800 bg-black/30">
-                  <summary className="cursor-pointer px-3 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-300">
-                    {k}
-                  </summary>
-                  <pre className="max-h-64 overflow-auto whitespace-pre-wrap px-3 pb-3 text-xs text-zinc-300">
-                    {v}
-                  </pre>
-                </details>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide text-zinc-500">Final answer</p>
-            <pre className="mt-1 max-h-96 overflow-auto whitespace-pre-wrap text-zinc-100">
-              {mutation.data.final}
-            </pre>
-          </div>
-          {Object.keys(mutation.data.delivery).length ? (
-            <div>
-              <p className="text-xs uppercase tracking-wide text-zinc-500">Delivery</p>
-              <pre className="mt-1 text-xs text-zinc-300">
-                {JSON.stringify(mutation.data.delivery, null, 2)}
-              </pre>
+          {mutation.error ? (
+            <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+              {(mutation.error as Error).message}
+            </p>
+          ) : null}
+          {mutation.data ? (
+            <div className="mt-6 space-y-4 rounded-lg border border-slate-100 bg-slate-50 p-4 text-sm">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Intent</p>
+                <p className="text-slate-900">{mutation.data.intent}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Final answer</p>
+                <pre className="mt-1 max-h-96 overflow-auto whitespace-pre-wrap text-slate-800">{mutation.data.final}</pre>
+              </div>
             </div>
           ) : null}
         </div>
-      ) : null}
-    </div>
+      }
+      architecturePanel={
+        <ArchitectOverview
+          tagline="Orchestration layer of the vpeetla-ai stack — what agents do, before AegisAI decides what they may do."
+          layers={LAYERS}
+          tradeoffs={TRADEOFFS}
+          metricsUrl={`${API_BASE}/api/v1/ops/metrics`}
+          metricLabels={{ runs: "Workflow runs", entities: "Chat threads", latency: "P95 latency" }}
+          eagleEyeNote="Pairs with AegisAI (governance), Enterprise RAG (knowledge), and AI Content Factory (application output)."
+        />
+      }
+    />
   );
 }

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArticleCard } from "@/components/portfolio/article-card";
 import { ArchitectureDiagram } from "@/components/portfolio/architecture-diagram";
 import { DistributionGrid } from "@/components/portfolio/distribution-grid";
-import { LivePlatformMetrics } from "@/components/portfolio/LivePlatformMetrics";
 import { MetricsRow } from "@/components/portfolio/metrics-row";
 import { OutcomeCard } from "@/components/portfolio/outcome-card";
 import { LeadershipSection } from "@/components/portfolio/leadership-section";
@@ -25,7 +24,6 @@ export default function Home() {
     <div className="space-y-20 md:space-y-24">
       <PortfolioHero />
       <MetricsRow />
-      <LivePlatformMetrics />
 
       <Section
         eyebrow="Quantified outcomes"
