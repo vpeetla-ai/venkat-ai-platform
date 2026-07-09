@@ -3,26 +3,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArchitectOverview } from "@/components/portfolio/ArchitectOverview";
+import { PlatformArchitecturePanel } from "@/components/portfolio/PlatformArchitecturePanel";
 import { ProductWorkbench } from "@/components/portfolio/ProductWorkbench";
 import { postChat } from "@/lib/api";
 import { useSettingsStore } from "@/lib/store";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://vap-api.onrender.com";
-
-const LAYERS = [
-  { tier: "L1", name: "Chat workbench", role: "Operator experience", components: ["Intent routing", "Thread memory", "Delivery toggles"] },
-  { tier: "L2", name: "Orchestration", role: "LangGraph workflows", components: ["Chief", "Planner", "Specialists", "Critic"] },
-  { tier: "L3", name: "Knowledge + notify", role: "RAG + channels", components: ["7 RAG strategies", "Slack/Telegram/WhatsApp", "AegisAI gateway"] },
-  { tier: "L4", name: "Ops", role: "Production proof", components: ["workflow_runs", "Observability", "/api/v1/ops/metrics"] },
-];
-
-const TRADEOFFS = [
-  { decision: "LangGraph over linear chains", gain: "Checkpoints, HITL, and multi-step enterprise workflows", trade: "Higher graph complexity than single-prompt UX" },
-  { decision: "Postgres workflow_runs", gain: "Live ops metrics without Langfuse dependency", trade: "Render Postgres vs pure static demo" },
-  { decision: "Gateway-wrapped notify channels", gain: "Side effects gated like production fleets", trade: "Extra hop through AegisAI for delivery" },
-  { decision: "Mock LLM on free tier", gain: "Always-on public demo", trade: "Response depth ≠ production models" },
-];
 
 export default function ChatPage() {
   const [input, setInput] = useState(
@@ -105,16 +89,7 @@ export default function ChatPage() {
           ) : null}
         </div>
       }
-      architecturePanel={
-        <ArchitectOverview
-          tagline="Orchestration layer of the vpeetla-ai stack — what agents do, before AegisAI decides what they may do."
-          layers={LAYERS}
-          tradeoffs={TRADEOFFS}
-          metricsUrl={`${API_BASE}/api/v1/ops/metrics`}
-          metricLabels={{ runs: "Workflow runs", entities: "Chat threads", latency: "P95 latency" }}
-          eagleEyeNote="Pairs with AegisAI (governance), Enterprise RAG (knowledge), and AI Content Factory (application output)."
-        />
-      }
+      architecturePanel={<PlatformArchitecturePanel />}
     />
   );
 }

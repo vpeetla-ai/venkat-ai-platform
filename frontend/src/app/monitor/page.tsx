@@ -1,12 +1,10 @@
-export default function MonitorPage() {
-  return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Workflow monitor</h1>
-      <p className="text-sm text-zinc-400">
-        LangGraph path: Chief → Planner → parallel workers → optional Content → Insight → Critic → Notify.
-      </p>
-      <pre className="overflow-x-auto rounded-xl border border-zinc-800 bg-black/40 p-4 text-xs text-emerald-200">
-{`START → chief → planner → workers → content_extra → insight → critic → compose → notify → END
+"use client";
+
+import Link from "next/link";
+import { PlatformArchitecturePanel } from "@/components/portfolio/PlatformArchitecturePanel";
+import { ProductWorkbench } from "@/components/portfolio/ProductWorkbench";
+
+const WORKFLOW_TRACE = `START → chief → planner → workers → content_extra → insight → critic → compose → notify → END
 
 workers (intent-aware, always +web):
   • news_learning         → +news
@@ -24,8 +22,25 @@ workers (intent-aware, always +web):
   • general               → +knowledge +code
 
 persistence: POST /chat (thread_id) · history: GET /threads/{id}/messages
-jobs: arq app.worker.settings.WorkerSettings (daily brief)`}
-      </pre>
-    </div>
+jobs: arq app.worker.settings.WorkerSettings (daily brief)`;
+
+export default function MonitorPage() {
+  return (
+    <ProductWorkbench
+      eyebrow="Runtime visibility"
+      productName="Workflow monitor"
+      subtitle="LangGraph path: Chief → Planner → parallel workers → optional Content → Insight → Critic → Notify."
+      headerActions={
+        <Link href="/chat" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+          Run chat demo
+        </Link>
+      }
+      productPanel={
+        <pre className="overflow-x-auto rounded-xl border border-slate-200 bg-slate-900 p-5 text-xs leading-relaxed text-emerald-100 shadow-sm">
+          {WORKFLOW_TRACE}
+        </pre>
+      }
+      architecturePanel={<PlatformArchitecturePanel />}
+    />
   );
 }

@@ -6,10 +6,10 @@ export function MetricsRow() {
       {metrics.map((m) => (
         <div
           key={m.label}
-          className="rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-5 transition hover:border-zinc-700/80 hover:bg-zinc-900/50"
+          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-md"
         >
-          <p className="text-3xl font-semibold tracking-tight text-amber-300/95">{m.value}</p>
-          <p className="mt-2 text-sm leading-snug text-zinc-500">{m.label}</p>
+          <p className="text-3xl font-semibold tracking-tight text-blue-700">{m.value}</p>
+          <p className="mt-2 text-sm leading-snug text-slate-600">{m.label}</p>
         </div>
       ))}
     </div>

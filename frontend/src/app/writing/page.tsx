@@ -14,11 +14,11 @@ export default function WritingPage() {
   return (
     <div className="space-y-16">
       <header className="max-w-3xl space-y-4">
-        <p className="text-xs font-medium uppercase tracking-[0.22em] text-teal-400">Writing</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-slate-500">Writing</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
           Architecture essays & distribution flywheel
         </h1>
-        <p className="text-base leading-relaxed text-zinc-400">
+        <p className="text-base leading-relaxed text-slate-600">
           Publishing 2–3 articles per week across Substack, Medium, and LinkedIn. This portfolio is the
           canonical hub — long-form depth lives here; social channels drive discovery and executive signal.
         </p>
@@ -27,7 +27,7 @@ export default function WritingPage() {
             href={profile.links.substack}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-teal-950 hover:bg-teal-400"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             Subscribe on Substack
           </a>
@@ -35,7 +35,7 @@ export default function WritingPage() {
             href={profile.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-200 hover:border-zinc-500"
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-slate-400 hover:bg-slate-50"
           >
             Follow on LinkedIn
           </a>
@@ -62,20 +62,20 @@ export default function WritingPage() {
         <DistributionGrid />
       </Section>
 
-      <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6 text-sm text-zinc-400">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600 shadow-sm">
         <p>
-          <strong className="text-zinc-200">Update your links:</strong> edit{" "}
-          <code className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-xs text-teal-300">
+          <strong className="text-slate-900">Update your links:</strong> edit{" "}
+          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-blue-800">
             frontend/src/lib/portfolio.ts
           </code>{" "}
           with live Substack/Medium URLs as publications go live. Article bodies live in{" "}
-          <code className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-xs text-teal-300">
+          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-blue-800">
             article-content.ts
           </code>
           .
         </p>
         <p className="mt-3">
-          <Link href="/architecture" className="font-medium text-teal-400 hover:text-teal-300">
+          <Link href="/architecture" className="font-medium text-blue-600 hover:text-blue-700">
             Pair essays with architecture pillars →
           </Link>
         </p>

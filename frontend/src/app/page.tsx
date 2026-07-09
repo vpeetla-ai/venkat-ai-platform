@@ -48,16 +48,16 @@ export default function Home() {
               <Link
                 key={cs.slug}
                 href={cs.href}
-                className="group flex flex-col rounded-2xl border border-zinc-800/80 bg-zinc-900/25 p-6 transition hover:border-teal-800/50"
+                className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-blue-200 hover:shadow-md"
               >
                 <div className="flex flex-wrap gap-2">
                   {cs.tags.map((t) => (
                     <Tag key={t}>{t}</Tag>
                   ))}
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-white group-hover:text-teal-50">{cs.title}</h3>
-                <p className="mt-2 flex-1 text-sm text-zinc-400">{cs.summary}</p>
-                <span className="mt-4 text-sm font-medium text-teal-400">View case study →</span>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">{cs.title}</h3>
+                <p className="mt-2 flex-1 text-sm text-slate-600">{cs.summary}</p>
+                <span className="mt-4 text-sm font-medium text-blue-600">View case study →</span>
               </Link>
             ))}
           </div>
@@ -85,10 +85,10 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-4 pt-2">
-          <Link href="/architecture" className="text-sm font-medium text-teal-400 transition hover:text-teal-300">
+          <Link href="/architecture" className="text-sm font-medium text-blue-600 transition hover:text-blue-700">
             Full architecture section →
           </Link>
-          <Link href="/writing" className="text-sm font-medium text-zinc-500 transition hover:text-zinc-300">
+          <Link href="/writing" className="text-sm font-medium text-slate-500 transition hover:text-slate-700">
             Writing & distribution →
           </Link>
         </div>
@@ -102,10 +102,10 @@ export default function Home() {
           {expertise.map((e) => (
             <div
               key={e.title}
-              className="rounded-2xl border border-zinc-800/60 bg-zinc-900/20 p-5"
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
             >
-              <h3 className="text-sm font-semibold text-white">{e.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-400">{e.body}</p>
+              <h3 className="text-sm font-semibold text-slate-900">{e.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{e.body}</p>
             </div>
           ))}
         </div>
@@ -128,16 +128,16 @@ export default function Home() {
         <DistributionGrid />
       </Section>
 
-      <div className="rounded-3xl border border-teal-900/40 bg-gradient-to-r from-teal-950/40 to-zinc-900/40 p-8 text-center md:p-10">
-        <h2 className="text-xl font-semibold text-white md:text-2xl">Explore the live platform demo</h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-zinc-400">
+      <div className="rounded-3xl border border-blue-200 bg-gradient-to-r from-blue-50 to-white p-8 text-center shadow-sm md:p-10">
+        <h2 className="text-xl font-semibold text-slate-900 md:text-2xl">Explore the live platform demo</h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-slate-600">
           Venkat AI Platform is the hands-on proof behind the architecture essays — multi-agent LangGraph,
           RAG, observability, and notification routing.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
             href="/chat"
-            className="rounded-xl bg-teal-500 px-5 py-2.5 text-sm font-semibold text-teal-950 hover:bg-teal-400"
+            className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
           >
             Open AI Chat demo
           </Link>
@@ -145,7 +145,7 @@ export default function Home() {
             href={profile.links.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl border border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-200 hover:border-zinc-500"
+            className="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 hover:border-slate-400 hover:bg-slate-50"
           >
             View source on GitHub
           </a>

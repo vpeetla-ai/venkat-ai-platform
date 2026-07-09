@@ -15,6 +15,8 @@ const platformNav = [
   { href: "/monitor", label: "Monitor" },
 ];
 
+const platformWorkbenchRoutes = ["/chat", "/dashboard", "/monitor", "/settings"];
+
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
   const active = pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -37,6 +39,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const onPlatform =
     platformNav.some((n) => pathname.startsWith(n.href)) || pathname === "/settings";
+  const onWorkbench = platformWorkbenchRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f4f6fb] text-slate-900">
@@ -83,7 +88,13 @@ export function Shell({ children }: { children: React.ReactNode }) {
         ) : null}
       </header>
 
-      <main className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-10 md:py-12">
+      <main
+        className={
+          onWorkbench
+            ? "flex w-full flex-1 flex-col"
+            : "relative mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-10 md:py-12"
+        }
+      >
         {children}
       </main>
 

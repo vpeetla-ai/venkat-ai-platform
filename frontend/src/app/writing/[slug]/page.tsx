@@ -36,21 +36,21 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-3xl space-y-10">
-      <header className="space-y-5 border-b border-zinc-800/80 pb-8">
-        <Link href="/writing" className="text-sm font-medium text-teal-400 hover:text-teal-300">
+      <header className="space-y-5 border-b border-slate-200 pb-8">
+        <Link href="/writing" className="text-sm font-medium text-blue-600 hover:text-blue-700">
           ← All writing
         </Link>
-        <div className="flex flex-wrap gap-2 text-xs text-zinc-500">
+        <div className="flex flex-wrap gap-2 text-xs text-slate-500">
           <time dateTime={article.publishedAt}>{date}</time>
           <span aria-hidden>·</span>
           <span>{article.readMinutes} min read</span>
           <span aria-hidden>·</span>
           <span>{profile.name}</span>
         </div>
-        <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl">
+        <h1 className="text-3xl font-semibold leading-tight tracking-tight text-slate-900 md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-lg leading-relaxed text-zinc-400">{article.summary}</p>
+        <p className="text-lg leading-relaxed text-slate-600">{article.summary}</p>
         <div className="flex flex-wrap gap-2">
           {article.tags.map((t) => (
             <Tag key={t}>{t}</Tag>
@@ -76,18 +76,18 @@ export default async function ArticlePage({ params }: Props) {
         ))}
       </div>
 
-      <aside className="rounded-2xl border border-teal-900/40 bg-teal-950/20 p-6">
-        <p className="text-xs font-semibold uppercase tracking-wide text-teal-400">Takeaway</p>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-300">{body.takeaway}</p>
+      <aside className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
+        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-blue-700">Takeaway</p>
+        <p className="mt-2 text-sm leading-relaxed text-slate-800">{body.takeaway}</p>
       </aside>
 
-      <footer className="flex flex-wrap gap-4 border-t border-zinc-800/80 pt-8 text-sm">
-        <span className="text-zinc-500">Also on:</span>
+      <footer className="flex flex-wrap gap-4 border-t border-slate-200 pt-8 text-sm">
+        <span className="text-slate-500">Also on:</span>
         <a
           href={profile.links.substack}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-teal-400 hover:text-teal-300"
+          className="text-blue-600 hover:text-blue-700"
         >
           Substack
         </a>
@@ -95,7 +95,7 @@ export default async function ArticlePage({ params }: Props) {
           href={profile.links.medium}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-teal-400 hover:text-teal-300"
+          className="text-blue-600 hover:text-blue-700"
         >
           Medium
         </a>
@@ -103,7 +103,7 @@ export default async function ArticlePage({ params }: Props) {
           href={profile.links.linkedin}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-teal-400 hover:text-teal-300"
+          className="text-blue-600 hover:text-blue-700"
         >
           LinkedIn
         </a>
