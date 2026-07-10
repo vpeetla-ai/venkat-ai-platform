@@ -39,7 +39,7 @@ VAP is a **multi-agent orchestration platform** with:
 |------------|----------------|
 | Intent routing | Chief orchestrator — 16 intent labels + 3 orchestrators |
 | Parallel evidence | asyncio worker bundles per intent |
-| RAG architectures | 6 strategies (naive, hybrid, multi-query, HyDE, rerank, parent-doc) |
+| RAG architectures | 7 strategies (naive, hybrid, multi-query, HyDE, rerank, parent-doc, enterprise) |
 | Loop patterns | ReAct, Reflection, Plan-Execute (`agents/loops/`) |
 | QA gate | CriticAgent (LLM review) before external delivery |
 | Persistence | Postgres threads, messages, workflow runs |
@@ -56,7 +56,7 @@ VAP is a **multi-agent orchestration platform** with:
 | Deep Research orchestrator | ✅ Recon + ReAct + reflection |
 | Architecture Review orchestrator | ✅ Specialists + plan-execute + reflection |
 | Chief intent routing (16 labels) | ✅ Auto-routes to orchestrators |
-| RAG strategy library (6 patterns) | ✅ `GET /rag/strategies` |
+| RAG strategy library (7 patterns, incl. Enterprise RAG adapter) | ✅ `GET /rag/strategies` |
 | Loop pattern agents | ✅ ReAct, Reflection, Plan-Execute |
 | Automated test suite | ✅ `pytest` in `backend/tests/` |
 | Postgres thread persistence | ✅ |
@@ -238,7 +238,7 @@ flowchart LR
 | `prototype_idea` | Web + PrototypeBuilder + Code |
 | `market_analysis` | Web + MarketIntelligence *(not financial advice)* |
 | `rag_query` | Web + Knowledge (hybrid RAG) |
-| `rag_expert` | All 6 RAG strategies compared |
+| `rag_expert` | All 7 RAG strategies compared |
 | `deep_research` | → **research** orchestrator |
 | `architecture_review` | → **architecture** orchestrator |
 | `enterprise_api` | Web + API integration patterns |
