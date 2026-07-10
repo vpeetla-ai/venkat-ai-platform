@@ -7,24 +7,22 @@ Production SLO definitions for portfolio reviewers and on-call runbooks.
 | SLI | Target | Measurement window | Status |
 |-----|--------|-------------------|--------|
 | **API availability** | 99.5% | 30 days | Measured via Render/Vercel `/health` (free-tier cold starts excluded from error budget narrative) |
-| **Eval regression** | 0 failures | Per merge | **Planned** — not yet a CI gate in this repo (see note) |
+| **Eval regression** | 0 failures | Per merge | ✅ Gated — `vap_orchestrator_invariant_v1` via `.github/workflows/backend-tests.yml` |
 | **Security scan** | No CRITICAL CVEs | Per PR | ✅ `.github/workflows/security-scan.yml` |
 | **Unit / API tests** | Pass | Per PR | ✅ `.github/workflows/backend-tests.yml` → `pytest` |
 
-## Eval regression — honest status
+## Eval regression — status
 
-Sister platforms (Enterprise RAG, LoopForge, ACF, DomainForge, Sentinel, AegisLoop) gate merges with suites from [`golden-eval-registry`](https://github.com/vpeetla-ai/golden-eval-registry).
+Sister platforms gate merges with suites from [`golden-eval-registry`](https://github.com/vpeetla-ai/golden-eval-registry).
 
-**VAP does not yet wire a golden suite in CI.** Earlier drafts of this doc over-claimed an org-wide gate here. Tracked as backlog **P2.4** in [`TOP1PCT_90DAY_BACKLOG.md`](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/docs/TOP1PCT_90DAY_BACKLOG.md).
-
-Until then, regressions are caught by `backend/tests` only.
+**VAP CI gates** `vap.orchestrator_invariant_v1` (kind `router_invariant`) against the live orchestrator registry + intent map — a stable invariant that must not regress without an intentional suite bump. Workflow: `.github/workflows/backend-tests.yml` checks out the registry and runs `backend/tests/test_golden_eval_gate.py`.
 
 ## How we measure
 
 | Signal | Source |
 |--------|--------|
 | Availability | Render/Vercel health + `/health` |
-| Eval regression | *Planned* — golden-eval-registry suite + workflow (P2.4) |
+| Eval regression | ✅ `golden-eval-registry` suite `vap_orchestrator_invariant_v1` in `backend-tests.yml` |
 | Test posture | `.github/workflows/backend-tests.yml` |
 | Security posture | `.github/workflows/security-scan.yml` |
 
