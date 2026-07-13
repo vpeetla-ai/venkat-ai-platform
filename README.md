@@ -63,6 +63,7 @@ VAP is a **multi-agent orchestration platform** with:
 | Langfuse spans (chief/planner/critic) | ✅ | Set `LANGFUSE_*` — [infra/README.md](infra/README.md) |
 | Pinecone | 🟡 Ingest mirror only |
 | AegisAI gateway (notify) | ✅ When `AEGISAI_API_BASE_URL` set — see [ECOSYSTEM.md](docs/ECOSYSTEM.md) |
+| LLM gateway plane | ✅ When `LLM_GATEWAY_URL` set — routes chat via [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) (ADR-028); else direct providers |
 | Approval gateway / HITL UI | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) for full queue |
 | API-key gate on `/chat`, `/orchestrators/*/run`, `/ingest`, `/rag/retrieve`, `/threads/*/messages` | ✅ Set `VAP_API_KEY` on Render — these routes call an LLM, write to the vector DB, send real Slack/Telegram/WhatsApp notifications, or read chat history, and previously had no auth dependency at all — see [ai-architecture-portfolio ADR-009](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/adr/ADR-009-vap-auth-gate.md) |
 | Durable scheduled-job queue | 🟡 ARQ + Redis only — a pending daily-brief job is lost if Redis is unavailable when it fires |
@@ -346,7 +347,7 @@ Staff+ prep crosswalk — [playbook](https://github.com/vpeetla-ai/ai-architect-
 |----------|-------|-----|
 | System design | [Agent tool-use / orchestration](https://ai-architect-interview-playbook.vercel.app/q/ai-system-design/03-agent-tool-use-orchestration-platform/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/ai-system-design/03-agent-tool-use-orchestration-platform.md)) | Core: LangGraph orchestrators + tool side effects via gateway |
 | System design | [Durable long-running agents](https://ai-architect-interview-playbook.vercel.app/q/ai-system-design/13-durable-long-running-agent-execution/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/ai-system-design/13-durable-long-running-agent-execution.md)) | Partial — threaded runs, HITL resume, persistence |
-| Cloud | [LLM gateway / model routing](https://ai-architect-interview-playbook.vercel.app/q/cloud-architecture/07-llm-gateway-semantic-cache-model-router/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/cloud-architecture/07-llm-gateway-semantic-cache-model-router.md)) | Multi-LLM routing + notify path through AegisAI |
+| Cloud | [LLM gateway / model routing](https://ai-architect-interview-playbook.vercel.app/q/cloud-architecture/07-llm-gateway-semantic-cache-model-router/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/cloud-architecture/07-llm-gateway-semantic-cache-model-router.md)) | `LLM_GATEWAY_URL` → aegis-llm-gateway; tool notify still via AegisAI |
 | Trade-offs | [Cost vs latency vs safety](https://ai-architect-interview-playbook.vercel.app/q/scalability-governance-tradeoffs/01-cost-vs-latency-vs-safety/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/scalability-governance-tradeoffs/01-cost-vs-latency-vs-safety.md)) | Routing / model choice under budget |
 | Trade-offs | [Centralize vs federate governance](https://ai-architect-interview-playbook.vercel.app/q/scalability-governance-tradeoffs/03-centralize-vs-federate-governance/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/scalability-governance-tradeoffs/03-centralize-vs-federate-governance.md)) | Orchestration here; policy in AegisAI |
 | Behavioral | [Leading a 0→1 AI product](https://ai-architect-interview-playbook.vercel.app/q/behavioral/05-leading-a-0-to-1-ai-product-build/) ([md](https://github.com/vpeetla-ai/ai-architect-interview-playbook/blob/main/behavioral/05-leading-a-0-to-1-ai-product-build.md)) | Platform build under ambiguity |
@@ -358,6 +359,8 @@ See [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md) for how repos connect.
 | Project | Role |
 |---------|------|
 | [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) | Governance control plane — gateway + HITL (pair with VAP) |
+| [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) | Shared LLM completions plane — set `LLM_GATEWAY_URL` |
+| [aegis-semantic-cache](https://github.com/vpeetla-ai/aegis-semantic-cache) | Tenant-isolated semantic cache (used by LLM gateway) |
 | [ai-content-factory](https://github.com/vpeetla-ai/ai-content-factory) | Content pipeline with HITL publish gate |
 | [enterprise_rag_platform](https://github.com/vpeetla-ai/enterprise_rag_platform) | Enterprise RAG governance patterns |
 

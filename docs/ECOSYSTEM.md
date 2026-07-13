@@ -94,6 +94,7 @@ Shared org pattern: [TRACE_LINKED_OBSERVABILITY](https://github.com/vpeetla-ai/a
 | Repo | Relationship |
 |------|--------------|
 | [aegisai-enterprise-agent-platform](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) | Governance layer for VAP tool calls |
+| [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) | Shared LLM completions — set `LLM_GATEWAY_URL` |
 | [ai-content-factory](https://github.com/vpeetla-ai/ai-content-factory) | Application-layer content automation |
 | [enterprise_rag_platform](https://github.com/vpeetla-ai/enterprise_rag_platform) | Governed knowledge layer — VAP `enterprise` RAG strategy calls `/v1/retrieve` |
 

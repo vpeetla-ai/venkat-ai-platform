@@ -2,15 +2,20 @@
 
 ## VAP model routing (application layer)
 
-VAP routes LLM calls by intent bucket via `app/llm/router.py` and `factory.py`:
+VAP routes LLM calls by intent bucket via `app/llm/router.py` and `factory.py`.
 
-| Bucket | Typical use | Provider (env) |
-|--------|-------------|----------------|
+**Preference order** (first match wins):
+
+1. **`LLM_GATEWAY_URL`** — OpenAI-compatible [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) (`/v1`); tenant via `LLM_GATEWAY_TENANT_ID` (default `vap`). See [ADR-028](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/docs/adr/028-llm-gateway-plane.md).
+2. Direct providers — OpenRouter / OpenAI / Groq (see `.env.example`).
+
+| Bucket | Typical use | When gateway unset |
+|--------|-------------|--------------------|
 | Fast | Classification, routing | `LLM_DEFAULT_PROVIDER` |
 | Reasoning | Planning, architecture graphs | OpenRouter / Anthropic |
 | Creative | Content drafts | Configurable per orchestrator |
 
-Set keys in `.env` — see `.env.example` for `OPENROUTER_*`, `OPENAI_*`, `GROQ_*`.
+Ops: `GET /api/v1/ops/metrics` → `extra.llm_gateway.enabled` when gateway is configured.
 
 ## Relationship to vLLM Architecture Lab
 
@@ -20,6 +25,7 @@ Set keys in `.env` — see `.env.example` for `OPENROUTER_*`, `OPENAI_*`, `GROQ_
 | Concern | Owner |
 |---------|-------|
 | Agent orchestration + router | `venkat-ai-platform` |
+| Shared completions + budget/cache | `aegis-llm-gateway` + `aegis-semantic-cache` |
 | Inference mechanics education | `vllm-architecture-lab` |
 | Production GPU serving | External vLLM / TGI — not duplicated in portfolio |
 

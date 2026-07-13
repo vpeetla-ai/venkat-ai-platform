@@ -4,10 +4,26 @@ from app.core.config import Settings, get_settings
 from app.llm.router import RouteBucket
 
 
+def llm_gateway_enabled(settings: Settings | None = None) -> bool:
+    settings = settings or get_settings()
+    return bool(settings.llm_gateway_url and settings.llm_gateway_url.strip())
+
+
 def chat_llm_for_bucket(bucket: RouteBucket, settings: Settings | None = None) -> ChatOpenAI:
     settings = settings or get_settings()
     model = _model_for_bucket(bucket, settings)
     kwargs: dict = {"model": model, "temperature": 0.2}
+
+    # Federated LLM gateway plane (aegis-llm-gateway) — preferred when configured.
+    if llm_gateway_enabled(settings):
+        base = settings.llm_gateway_url.rstrip("/")
+        headers = {"X-Tenant-Id": settings.llm_gateway_tenant_id or "vap"}
+        return ChatOpenAI(
+            api_key=settings.llm_gateway_api_key or "vap-gateway",
+            base_url=base,
+            default_headers=headers,
+            **kwargs,
+        )
 
     if settings.llm_default_provider == "openrouter" and settings.openrouter_api_key:
         return ChatOpenAI(
@@ -25,7 +41,8 @@ def chat_llm_for_bucket(bucket: RouteBucket, settings: Settings | None = None) -
             temperature=0.2,
         )
     raise RuntimeError(
-        "No LLM credentials configured. Set OPENROUTER_API_KEY, OPENAI_API_KEY, or GROQ_API_KEY."
+        "No LLM credentials configured. Set LLM_GATEWAY_URL, OPENROUTER_API_KEY, "
+        "OPENAI_API_KEY, or GROQ_API_KEY."
     )
 
 

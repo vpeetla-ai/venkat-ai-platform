@@ -79,6 +79,12 @@ class Settings(BaseSettings):
     llm_default_provider: str = "openrouter"
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
 
+    # Shared LLM gateway plane (ADR-028) — when set, all chat completions go through
+    # aegis-llm-gateway (OpenAI-shaped). Direct provider keys become fallback only.
+    llm_gateway_url: str | None = None  # e.g. http://127.0.0.1:8100/v1
+    llm_gateway_api_key: str | None = None
+    llm_gateway_tenant_id: str = "vap"
+
     embedding_provider: str = "openai"
     cohere_api_key: str | None = None
 
