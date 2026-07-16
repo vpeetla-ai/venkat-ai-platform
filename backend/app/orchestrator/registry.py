@@ -10,6 +10,7 @@ from app.agents.chief import classify_intent
 from app.orchestrator.architecture_graph import run_architecture_turn
 from app.orchestrator.graph import run_platform_graph_turn
 from app.orchestrator.research_graph import run_research_turn
+from app.services.finops_outcomes import record_platform_outcome
 
 OrchestratorFn = Callable[[str, list[str] | None], Awaitable[dict[str, Any]]]
 
@@ -72,4 +73,6 @@ async def run_platform_turn(
     state = await runner(user_message, notify_channels, audit_case_id=audit_case_id)
     if intent and not state.get("intent"):
         state["intent"] = intent
+    state["orchestrator_id"] = orch_id
+    await record_platform_outcome(workflow_id=audit_case_id, state=state)
     return state

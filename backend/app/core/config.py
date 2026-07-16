@@ -85,6 +85,10 @@ class Settings(BaseSettings):
     llm_gateway_api_key: str | None = None
     llm_gateway_tenant_id: str = "vap"
 
+    # ADR-029 outcome KPI (optional)
+    agentfinops_url: str | None = None
+    agentfinops_api_key: str | None = None
+
     embedding_provider: str = "openai"
     cohere_api_key: str | None = None
 
