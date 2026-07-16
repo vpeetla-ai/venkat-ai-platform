@@ -63,6 +63,8 @@ def chat_llm_for_bucket(
             headers["X-Generator-Provider"] = generator_provider
         if thesis == "verifier":
             headers["X-Cache-Bypass"] = "true"
+        if settings.llm_gateway_principal_id:
+            headers["X-Principal-Id"] = settings.llm_gateway_principal_id
             # Prefer structured/reasoning model but different provider label for enforce
             kwargs["model"] = settings.model_reasoning
         return ChatOpenAI(

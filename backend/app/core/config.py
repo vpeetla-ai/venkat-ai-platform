@@ -84,6 +84,7 @@ class Settings(BaseSettings):
     llm_gateway_url: str | None = None  # e.g. http://127.0.0.1:8100/v1
     llm_gateway_api_key: str | None = None
     llm_gateway_tenant_id: str = "vap"
+    llm_gateway_principal_id: str | None = None
 
     # ADR-029 outcome KPI (optional)
     agentfinops_url: str | None = None
