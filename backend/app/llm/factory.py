@@ -3,13 +3,40 @@ from langchain_openai import ChatOpenAI
 from app.core.config import Settings, get_settings
 from app.llm.router import RouteBucket
 
+# App-local → thesis (keep VAP names; contract-aligned)
+_BUCKET_TIER = {
+    RouteBucket.REASONING: "high_reasoning",
+    RouteBucket.STRUCTURED: "specialized",
+    RouteBucket.FAST: "fast",
+    RouteBucket.CODE: "specialized",
+}
+
+_AGENT_THESIS = {
+    "chief": "planner",
+    "planner": "planner",
+    "researcher": "retriever",
+    "worker": "executor",
+    "coder": "executor",
+    "critic": "verifier",
+    "verifier": "verifier",
+    "summarizer": "summarizer",
+}
+
 
 def llm_gateway_enabled(settings: Settings | None = None) -> bool:
     settings = settings or get_settings()
     return bool(settings.llm_gateway_url and settings.llm_gateway_url.strip())
 
 
-def chat_llm_for_bucket(bucket: RouteBucket, settings: Settings | None = None) -> ChatOpenAI:
+def chat_llm_for_bucket(
+    bucket: RouteBucket,
+    settings: Settings | None = None,
+    *,
+    agent_role: str | None = None,
+    data_class: str = "internal",
+    generator_provider: str | None = None,
+    workflow_id: str | None = None,
+) -> ChatOpenAI:
     settings = settings or get_settings()
     model = _model_for_bucket(bucket, settings)
     kwargs: dict = {"model": model, "temperature": 0.2}
@@ -17,7 +44,27 @@ def chat_llm_for_bucket(bucket: RouteBucket, settings: Settings | None = None) -
     # Federated LLM gateway plane (aegis-llm-gateway) — preferred when configured.
     if llm_gateway_enabled(settings):
         base = settings.llm_gateway_url.rstrip("/")
-        headers = {"X-Tenant-Id": settings.llm_gateway_tenant_id or "vap"}
+        thesis = _AGENT_THESIS.get((agent_role or "").lower(), "executor")
+        # Verifier independence: selected provider must differ from generator.
+        selected = "gemini" if thesis == "verifier" else "stub"
+        if thesis == "verifier" and (generator_provider or "").lower() == "gemini":
+            selected = "anthropic"
+        headers = {
+            "X-Tenant-Id": settings.llm_gateway_tenant_id or "vap",
+            "X-Agent-Role": agent_role or "worker",
+            "X-Thesis-Role": thesis,
+            "X-Data-Class": data_class,
+            "X-Selected-Provider": selected,
+            "X-Model-Tier": _BUCKET_TIER.get(bucket, "high_reasoning"),
+        }
+        if workflow_id:
+            headers["X-Workflow-Id"] = workflow_id
+        if generator_provider:
+            headers["X-Generator-Provider"] = generator_provider
+        if thesis == "verifier":
+            headers["X-Cache-Bypass"] = "true"
+            # Prefer structured/reasoning model but different provider label for enforce
+            kwargs["model"] = settings.model_reasoning
         return ChatOpenAI(
             api_key=settings.llm_gateway_api_key or "vap-gateway",
             base_url=base,
