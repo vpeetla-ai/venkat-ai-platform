@@ -6,7 +6,7 @@ VAP routes LLM calls by intent bucket via `app/llm/router.py` and `factory.py`.
 
 **Preference order** (first match wins):
 
-1. **`LLM_GATEWAY_URL`** — OpenAI-compatible [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) (`/v1`); tenant via `LLM_GATEWAY_TENANT_ID` (default `vap`). See [ADR-028](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/docs/adr/028-llm-gateway-plane.md).
+1. **`LLM_GATEWAY_URL`** — OpenAI-compatible [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) (`/v1`); tenant via `LLM_GATEWAY_TENANT_ID` (default `vap`). VAP **selects** the bucket/model; the gateway **enforces + records** role/tier/data-class headers ([ADR-028](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/adr/ADR-028-federated-ai-control-plane-k8s-analogy.md) · [ADR-029](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/adr/ADR-029-app-owned-role-aware-routing-contract.md)). Live: `https://aegis-llm-gateway-api.onrender.com` (stub default).
 2. Direct providers — OpenRouter / OpenAI / Groq (see `.env.example`).
 
 | Bucket | Typical use | When gateway unset |
@@ -25,7 +25,7 @@ Ops: `GET /api/v1/ops/metrics` → `extra.llm_gateway.enabled` when gateway is c
 | Concern | Owner |
 |---------|-------|
 | Agent orchestration + router | `venkat-ai-platform` |
-| Shared completions + budget/cache | `aegis-llm-gateway` + `aegis-semantic-cache` |
+| Shared completions + budget/cache | `aegis-llm-gateway` + `aegis-semantic-cache` (+ `aegis-routing-contract`) |
 | Inference mechanics education | `vllm-architecture-lab` |
 | Production GPU serving | External vLLM / TGI — not duplicated in portfolio |
 
