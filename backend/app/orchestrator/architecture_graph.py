@@ -98,7 +98,11 @@ async def node_reflection(state: ArchitectureState) -> dict:
 
 async def node_security_critic(state: ArchitectureState) -> dict:
     with langfuse_span("architecture.critic"):
-        extra = await run_critic_agent(state.get("insight", ""))
+        extra = await run_critic_agent(
+            state.get("insight", ""),
+            generator_provider="stub",
+            workflow_id=state.get("audit_case_id"),
+        )
     critic = f"{state.get('critic', '')}\n\n---\nFinal QA:\n{extra}"
     return {"critic": critic}
 

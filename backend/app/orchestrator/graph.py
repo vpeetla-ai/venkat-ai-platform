@@ -117,8 +117,19 @@ async def node_insight(state: VState) -> dict:
 
 async def node_critic(state: VState) -> dict:
     draft = state.get("insight", "")
+    # ADR-029: verifier provider must differ from generator (insight used structured/reasoning path)
+    gen_provider = "stub"
+    # When plane is configured, non-verifier calls advertise selected_provider=stub;
+    # critic advertises gemini so gateway can enforce independence.
+    from app.llm.factory import llm_gateway_enabled
+    if llm_gateway_enabled():
+        gen_provider = "stub"
     with langfuse_span("critic.review"):
-        critic = await run_critic_agent(draft)
+        critic = await run_critic_agent(
+            draft,
+            generator_provider=gen_provider,
+            workflow_id=state.get("audit_case_id"),
+        )
     return {"critic": critic}
 
 
