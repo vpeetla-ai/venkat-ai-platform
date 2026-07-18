@@ -2,10 +2,10 @@ import logging
 
 from fastapi import APIRouter, Depends
 from sse_starlette.sse import EventSourceResponse
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_db, require_api_key
+from app.api.deps import require_api_key
 from app.core.config import get_settings
+from app.db.session import async_session_factory
 from app.orchestrator.registry import run_platform_turn
 from app.repositories.chat_repository import append_message, persist_workflow_run, resolve_thread
 from app.schemas.chat import ChatRequest, ChatResponse
@@ -16,7 +16,13 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 
 @router.post("", response_model=ChatResponse, dependencies=[Depends(require_api_key)])
-async def chat(req: ChatRequest, session: AsyncSession = Depends(get_db)) -> ChatResponse:
+async def chat(req: ChatRequest) -> ChatResponse:
+    """Run the platform turn even when Postgres is unavailable.
+
+    Persistence is best-effort. A hard Depends(get_db) previously 500'd the whole
+    /chat path when DATABASE_URL/Postgres was down (common on free-tier expiry),
+    which broke keyed golden-path ask→answer despite a valid VAP_API_KEY.
+    """
     settings = get_settings()
     state = await run_platform_turn(
         req.message,
@@ -35,29 +41,30 @@ async def chat(req: ChatRequest, session: AsyncSession = Depends(get_db)) -> Cha
         return response
 
     try:
-        thread = await resolve_thread(session, req.thread_id)
-        await append_message(session, thread.id, "user", req.message)
-        run = await persist_workflow_run(
-            session,
-            thread_id=thread.id,
-            intent=response.intent,
-            plan=response.plan,
-            outputs=response.outputs,
-            final=response.final,
-            delivery=response.delivery,
-        )
-        await append_message(
-            session,
-            thread.id,
-            "assistant",
-            response.final,
-            meta={"intent": response.intent, "run_id": str(run.id)},
-        )
-        await session.commit()
-        return response.model_copy(update={"thread_id": thread.id, "run_id": run.id})
+        factory = async_session_factory()
+        async with factory() as session:
+            thread = await resolve_thread(session, req.thread_id)
+            await append_message(session, thread.id, "user", req.message)
+            run = await persist_workflow_run(
+                session,
+                thread_id=thread.id,
+                intent=response.intent,
+                plan=response.plan,
+                outputs=response.outputs,
+                final=response.final,
+                delivery=response.delivery,
+            )
+            await append_message(
+                session,
+                thread.id,
+                "assistant",
+                response.final,
+                meta={"intent": response.intent, "run_id": str(run.id)},
+            )
+            await session.commit()
+            return response.model_copy(update={"thread_id": thread.id, "run_id": run.id})
     except Exception:  # noqa: BLE001
         logger.exception("Persistence failed; returning ephemeral response")
-        await session.rollback()
         return response
 
 
