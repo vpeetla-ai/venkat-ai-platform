@@ -1,11 +1,13 @@
-# Render Blueprint — Venkat AI Platform API (free tier)
+# Render Blueprint — Venkat AI Platform API
+# S3.1 (Top-1% plan D2): starter = always-on for Principal panels (no free-tier spin-down).
+# Apply in Render Dashboard → Blueprint sync, or manually set vap-api plan to Starter.
 services:
   - type: web
     name: vap-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
-    plan: free
+    plan: starter
     region: oregon
     healthCheckPath: /health
     autoDeployTrigger: commit
