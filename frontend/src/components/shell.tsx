@@ -77,11 +77,15 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
         {onPlatform ? (
-          <div className="border-t border-blue-100 bg-blue-50/80">
-            <p className="mx-auto max-w-6xl px-4 py-2 text-center text-xs text-blue-800/90">
-              Live reference architecture demo —{" "}
-              <Link href="/architecture" className="font-medium underline underline-offset-2 hover:text-blue-900">
-                read the architecture lens
+          <div className="border-t border-amber-200 bg-amber-50">
+            <p className="mx-auto max-w-6xl px-4 py-2 text-center text-xs leading-5 text-amber-900">
+              <span className="font-semibold uppercase tracking-wide">Demo review mode</span>
+              {" — "}
+              orchestration reference with gateway notify fail-open by default. Prefer AegisAI{" "}
+              <code className="rounded bg-amber-100 px-1">PRODUCTION_STRICT</code> + Strict ERAG for
+              Principal panels.{" "}
+              <Link href="/architecture" className="font-medium underline underline-offset-2 hover:text-amber-950">
+                Architecture lens
               </Link>
             </p>
           </div>
