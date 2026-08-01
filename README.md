@@ -21,9 +21,9 @@ git clone https://github.com/vpeetla-ai/vpeetla-ai-skills.git
 [![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-purple)](https://langchain-ai.github.io/langgraph/)
 [![Stack](https://img.shields.io/badge/RAG-Qdrant%20primary-blue)](https://qdrant.tech/)
 
-**Principal-architect multi-agent operating system** — Chief routes intent, specialist agents run in parallel, Critic guards output, notifications fan out to Slack, Telegram, and WhatsApp.
+**Job of the system:** route intent, run specialists in parallel, critique before anything leaves, notify channels — the multi-agent *operating system*. Governance (policy, HITL, signed audit) lives next door in AegisAI; VAP calls the gateway at side-effect edges instead of owning the constitution.
 
-> A portfolio-grade reference for **LangGraph orchestration**, **multi-LLM routing**, **Qdrant RAG** (optional Pinecone ingest mirror), **Langfuse observability**, and **production persistence** — with publication-ready ADRs and design docs.
+> Chief classifies → specialists work → Critic gates → Slack / Telegram / WhatsApp. LangGraph orchestration, multi-LLM routing, Qdrant RAG, Langfuse when configured, Postgres persistence.
 
 [▶ Live demo](https://venkat-ai-platform.vercel.app) · [📖 Principal design doc](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) · [🏗 Architecture catalog](docs/ARCHITECTURE.md) · [🔗 Ecosystem map](docs/ECOSYSTEM.md) · [🚀 Deploy guide](docs/LIVE_DEMO.md)
 
@@ -31,9 +31,9 @@ git clone https://github.com/vpeetla-ai/vpeetla-ai-skills.git
 
 ## Why this exists
 
-Single-chat LLM wrappers cannot model how principal architects actually work: route intent, parallelize research, synthesize insight, critique before delivery, and notify across channels.
+A single-chat wrapper can't model how I'd actually work: classify the ask, parallelize research, synthesize, critique before delivery, fan out to channels.
 
-VAP is a **multi-agent orchestration platform** with:
+VAP is that orchestration layer:
 
 | Capability | Implementation |
 |------------|----------------|
@@ -45,6 +45,8 @@ VAP is a **multi-agent orchestration platform** with:
 | Persistence | Postgres threads, messages, workflow runs |
 | Schedules | Redis + ARQ cron for daily briefs |
 | Observability | Langfuse spans on critical nodes |
+
+**What VAP is not:** the enterprise governance control plane. Pair with [AegisAI](https://github.com/vpeetla-ai/aegisai-enterprise-agent-platform) for policy, HITL queues, signed audit, and fleet registry. Demo may run without gateway URL set; notify governance is live when `AEGISAI_API_BASE_URL` is configured.
 
 ---
 
