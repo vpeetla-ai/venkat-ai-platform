@@ -57,10 +57,16 @@ def test_ops_metrics_shows_llm_gateway(monkeypatch):
             client = TestClient(app)
             resp = client.get("/api/v1/ops/metrics")
         assert resp.status_code == 200
-        gw = resp.json()["extra"]["llm_gateway"]
+        body = resp.json()["extra"]
+        gw = body["llm_gateway"]
         assert gw["enabled"] is True
         assert gw["plane"] == "aegis-llm-gateway"
         assert gw["tenant_id"] == "vap"
+        assert "aegis_gateway" in body
+        assert body["aegis_gateway"]["plane"] == "aegisai-tool-gateway"
+        assert body["hitl"]["ui"] == "aegisai"
+        assert "module=hitl" in body["hitl"]["deep_link"]
+        assert "langfuse_configured" in body["observability"]
     finally:
         app.dependency_overrides.pop(get_session, None)
         get_settings.cache_clear()

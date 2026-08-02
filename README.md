@@ -61,6 +61,7 @@ VAP is a **multi-agent orchestration platform** with:
 | Automated test suite | ✅ `pytest` in `backend/tests/` |
 | Postgres thread persistence | ✅ |
 | Langfuse spans (chief/planner/critic) | ✅ | Set `LANGFUSE_*` — [infra/README.md](infra/README.md) |
+| Ops metrics compose planes | ✅ | `GET /api/v1/ops/metrics` exposes LLM gateway + AegisAI notify + Langfuse posture + HITL deep-link |
 | Pinecone | 🟡 Ingest mirror only |
 | AegisAI gateway (notify) | ✅ When `AEGISAI_API_BASE_URL` set — see [ECOSYSTEM.md](docs/ECOSYSTEM.md) |
 | LLM gateway plane | ✅ When `LLM_GATEWAY_URL` set — VAP **selects** buckets; [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) **enforces+records** (ADR-028/029); else direct providers |
