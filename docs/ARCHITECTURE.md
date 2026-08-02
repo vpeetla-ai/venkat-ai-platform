@@ -202,6 +202,8 @@ Worker bundle selection: `backend/app/orchestrator/graph.py` (`SPECIALISTS` dict
 | `GET /threads/{id}/messages` | Thread history from Postgres |
 | `POST /ingest` | Upsert chunks to Qdrant (+ optional Pinecone mirror) |
 | `GET /health` | Liveness |
+| `GET /api/v1/ops/metrics` | Anonymized ops aggregates + compose planes |
+| `GET /api/v1/ops/observability/status` | Compose honesty — orchestration vs AegisAI HITL SoT |
 
 ## Ecosystem alignment
 
@@ -224,7 +226,7 @@ VAP answers **what agents should do**. For **what agents are allowed to do** (ga
 | 4 LLM router | ✅ `llm/router.py`, `factory.py` (`bucket_for_intent` defined, routing uses env defaults) |
 | 5 LangGraph | ✅ Linear 9-node graph (`orchestrator/graph.py`) |
 | 6 RAG | ✅ `/ingest`, Qdrant; Pinecone ingest mirror optional |
-| 7 Observability | ✅ Langfuse spans on chief/planner/critic |
+| 7 Observability | ✅ Langfuse spans + public `/api/v1/ops/observability/status` (Langfuse ≠ HITL ledger) |
 | 8 Enterprise | 🟡 Salesforce stub route only |
 | 9 Content engine | ✅ ContentAgent for `news_learning` |
 | 10 Advanced | ❌ Voice, marketplace, MCP — future |
