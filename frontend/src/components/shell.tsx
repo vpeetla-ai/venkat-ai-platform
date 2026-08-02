@@ -83,7 +83,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
               {" — "}
               orchestration reference with gateway notify fail-open by default. Prefer AegisAI{" "}
               <code className="rounded bg-amber-100 px-1">PRODUCTION_STRICT</code> + Strict ERAG for
-              Principal panels.{" "}
+              Principal panels. For HITL approvals after notify gateway decisions, open the{" "}
+              <a
+                href="https://aegisai-enterprise-agent-platform.vercel.app/?view=product&module=hitl"
+                className="font-medium underline underline-offset-2 hover:text-amber-950"
+                target="_blank"
+                rel="noreferrer"
+              >
+                AegisAI HITL queue
+              </a>
+              .{" "}
               <Link href="/architecture" className="font-medium underline underline-offset-2 hover:text-amber-950">
                 Architecture lens
               </Link>
