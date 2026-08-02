@@ -171,6 +171,47 @@ export function ArchitectOverview({
               />
               <MetricCard label={labels.entities} value={String(metrics.active_entities)} />
             </div>
+            {metrics.extra ? (
+              <ul className="mt-4 grid gap-2 text-xs text-slate-600 sm:grid-cols-2" aria-label="Compose planes">
+                <ComposePlane
+                  label="LLM gateway"
+                  on={Boolean((metrics.extra.llm_gateway as { enabled?: boolean } | undefined)?.enabled)}
+                  detail="aegis-llm-gateway"
+                />
+                <ComposePlane
+                  label="AegisAI notify"
+                  on={Boolean((metrics.extra.aegis_gateway as { configured?: boolean } | undefined)?.configured)}
+                  detail={
+                    (metrics.extra.aegis_gateway as { fail_open?: boolean } | undefined)?.fail_open
+                      ? "fail-open default"
+                      : "configured"
+                  }
+                />
+                <ComposePlane
+                  label="Langfuse"
+                  on={Boolean(
+                    (metrics.extra.observability as { langfuse_configured?: boolean } | undefined)
+                      ?.langfuse_configured
+                  )}
+                  detail="optional traces"
+                />
+                <li className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+                  <span className="font-semibold text-slate-800">HITL UI</span>
+                  {" · "}
+                  <a
+                    href={String(
+                      (metrics.extra.hitl as { deep_link?: string } | undefined)?.deep_link ||
+                        "https://aegisai-enterprise-agent-platform.vercel.app/?view=product&module=hitl"
+                    )}
+                    className="font-medium text-teal-700 underline underline-offset-2"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    AegisAI queue
+                  </a>
+                </li>
+              </ul>
+            ) : null}
             <p className="mt-4 font-mono text-xs text-slate-500">
               {metricsUrl.replace(/^https?:\/\/[^/]+/, "")} · SLO {metrics.slo.success_target_pct}% success ·{" "}
               {metrics.slo.target_uptime_pct}% uptime target
@@ -196,6 +237,26 @@ function MetricCard({ label, value }: { label: string; value: string }) {
       <p className="text-xs font-medium text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">{value}</p>
     </div>
+  );
+}
+
+function ComposePlane({
+  label,
+  on,
+  detail,
+}: {
+  label: string;
+  on: boolean;
+  detail: string;
+}) {
+  return (
+    <li className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+      <span className="font-semibold text-slate-800">{label}</span>
+      <span className="text-slate-500">
+        {" "}
+        · {on ? "on" : "off"} · {detail}
+      </span>
+    </li>
   );
 }
 
