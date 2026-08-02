@@ -49,3 +49,53 @@ async def ops_metrics(db: Annotated[AsyncSession, Depends(get_session)]):
     }
     metrics["extra"] = extra
     return metrics
+
+
+@router.get("/observability/status")
+async def observability_status():
+    """Compose-plane honesty for VAP (orchestration) — not governance SoT."""
+    settings = get_settings()
+    aegis_configured = bool((settings.aegisai_api_base_url or "").strip())
+    langfuse_configured = bool(
+        (settings.langfuse_public_key or "").strip() and (settings.langfuse_secret_key or "").strip()
+    )
+    return {
+        "source_of_truth": (
+            "VAP run/thread store for orchestration plans; "
+            "AegisAI remains HITL/audit source of truth for side effects"
+        ),
+        "exporters": [
+            {
+                "name": "OpsMetrics",
+                "state": "live",
+                "detail": "GET /api/v1/ops/metrics — anonymized run counters + compose planes",
+            },
+            {
+                "name": "Langfuse",
+                "state": "configured" if langfuse_configured else "unconfigured",
+                "detail": "Optional trace export — not required for Demo mode",
+            },
+        ],
+        "planes": {
+            "llm_gateway": {
+                "enabled": llm_gateway_enabled(settings),
+                "url_configured": bool(settings.llm_gateway_url),
+                "plane": "aegis-llm-gateway",
+            },
+            "aegis_gateway": {
+                "configured": aegis_configured,
+                "enabled": bool(settings.aegisai_gateway_enabled) and aegis_configured,
+                "fail_open": bool(settings.aegisai_gateway_fail_open),
+                "plane": "aegisai-tool-gateway",
+            },
+            "langfuse": {
+                "configured": langfuse_configured,
+                "host": settings.langfuse_host if langfuse_configured else None,
+            },
+            "hitl": {"ui": "aegisai", "deep_link": AEGIS_HITL_DEEP_LINK},
+        },
+        "recommendation": (
+            "Use VAP for what agents should do; route irreversible tools through AegisAI. "
+            "Do not treat Langfuse as the governance ledger."
+        ),
+    }
