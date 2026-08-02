@@ -67,6 +67,14 @@ def test_ops_metrics_shows_llm_gateway(monkeypatch):
         assert body["hitl"]["ui"] == "aegisai"
         assert "module=hitl" in body["hitl"]["deep_link"]
         assert "langfuse_configured" in body["observability"]
+
+        status = client.get("/api/v1/ops/observability/status")
+        assert status.status_code == 200
+        planes = status.json()["planes"]
+        assert planes["llm_gateway"]["plane"] == "aegis-llm-gateway"
+        assert planes["aegis_gateway"]["plane"] == "aegisai-tool-gateway"
+        assert planes["hitl"]["ui"] == "aegisai"
+        assert planes["langfuse"]["configured"] is False
     finally:
         app.dependency_overrides.pop(get_session, None)
         get_settings.cache_clear()
