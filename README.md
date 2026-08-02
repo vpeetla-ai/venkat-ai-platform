@@ -64,7 +64,7 @@ VAP is a **multi-agent orchestration platform** with:
 | Pinecone | 🟡 Ingest mirror only |
 | AegisAI gateway (notify) | ✅ When `AEGISAI_API_BASE_URL` set — see [ECOSYSTEM.md](docs/ECOSYSTEM.md) |
 | LLM gateway plane | ✅ When `LLM_GATEWAY_URL` set — VAP **selects** buckets; [aegis-llm-gateway](https://github.com/vpeetla-ai/aegis-llm-gateway) **enforces+records** (ADR-028/029); else direct providers |
-| Approval gateway / HITL UI | ❌ — pair with [AegisAI](docs/ECOSYSTEM.md) for full queue |
+| Approval gateway / HITL UI | 🟡 Deep-link — Demo banner → [AegisAI HITL queue](https://aegisai-enterprise-agent-platform.vercel.app/?view=product&module=hitl) (`?view=product&module=hitl`); VAP does not host a duplicate approval UI |
 | API-key gate on `/chat`, `/orchestrators/*/run`, `/ingest`, `/rag/retrieve`, `/threads/*/messages` | ✅ Set `VAP_API_KEY` on Render — these routes call an LLM, write to the vector DB, send real Slack/Telegram/WhatsApp notifications, or read chat history, and previously had no auth dependency at all — see [ai-architecture-portfolio ADR-009](https://github.com/vpeetla-ai/ai-architecture-portfolio/blob/main/adr/ADR-009-vap-auth-gate.md) |
 | Durable scheduled-job queue | 🟡 ARQ + Redis only — a pending daily-brief job is lost if Redis is unavailable when it fires |
 
