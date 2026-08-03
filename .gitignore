@@ -32,3 +32,5 @@ backend/*.egg-info/
 # Logs & misc
 *.log
 .langfuse/
+.vercel
+.env*
