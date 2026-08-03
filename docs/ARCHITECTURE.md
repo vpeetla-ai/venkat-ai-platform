@@ -240,3 +240,5 @@ VAP answers **what agents should do**. For **what agents are allowed to do** (ga
 
 - Never ship market commentary without disclaimers and human review for external audiences.  
 - Slack/Telegram/WhatsApp credentials are **server-side only**; the UI only toggles which channels to request.
+
+<!-- aegis-openai-verify -->
