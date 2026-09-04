@@ -69,6 +69,7 @@ All strategies in `backend/app/memory/rag_strategies.py` — exposed via `GET /r
 | `parent_document` | Chunk search → return `parent_text` from ingest metadata |
 | `rerank` | Over-fetch + LLM rerank |
 | `hyde` | Hypothetical document embedding |
+| `enterprise` | Calls external enterprise RAG API (`app/integrations/enterprise_rag.py`) when `ENTERPRISE_RAG_*` configured; falls back to Qdrant otherwise |
 
 Ingest parent-doc RAG: include `metadata.parent_id` and `metadata.parent_text` in `POST /ingest` chunks.
 
@@ -82,7 +83,10 @@ flowchart LR
     Q --> HY["hyde"]
     Q --> RR["rerank"]
     Q --> PD["parent_document"]
+    Q --> ENT["enterprise"]
     N & H & M & HY & RR & PD --> QD["Qdrant"]
+    ENT -->|configured| ERAG["Enterprise RAG API"]
+    ENT -->|fallback| QD
 ```
 
 ## AegisAI gateway integration
