@@ -23,6 +23,8 @@ git clone https://github.com/vpeetla-ai/vpeetla-ai-skills.git
 
 **Job of the system:** route intent, run specialists in parallel, critique before anything leaves, notify channels — the multi-agent *operating system*. Governance (policy, HITL, signed audit) lives next door in AegisAI; VAP calls the gateway at side-effect edges instead of owning the constitution.
 
+This is personal work — a public reference you can inspect. Orchestration stays separate from the gateway on purpose.
+
 > Chief classifies → specialists work → Critic gates → Slack / Telegram / WhatsApp. LangGraph orchestration, multi-LLM routing, Qdrant RAG, Langfuse when configured, Postgres persistence.
 
 [▶ Live demo](https://venkat-ai-platform.vercel.app) · [📖 Principal design doc](docs/PRINCIPAL_AI_ARCHITECT_DESIGN_DOCUMENT.md) · [🏗 Architecture catalog](docs/ARCHITECTURE.md) · [🔗 Ecosystem map](docs/ECOSYSTEM.md) · [🚀 Deploy guide](docs/LIVE_DEMO.md)
