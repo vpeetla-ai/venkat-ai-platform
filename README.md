@@ -23,7 +23,7 @@ git clone https://github.com/vpeetla-ai/vpeetla-ai-skills.git
 
 **Job of the system:** route intent, run specialists in parallel, critique before anything leaves, notify channels — the multi-agent *operating system*. Governance (policy, HITL, signed audit) lives next door in AegisAI; VAP calls the gateway at side-effect edges instead of owning the constitution.
 
-This repo is the **pattern**. It is not Lucid's production binary. Orchestration stays separate from the gateway on purpose.
+This is personal work — a public reference you can inspect. Orchestration stays separate from the gateway on purpose.
 
 > Chief classifies → specialists work → Critic gates → Slack / Telegram / WhatsApp. LangGraph orchestration, multi-LLM routing, Qdrant RAG, Langfuse when configured, Postgres persistence.
 
