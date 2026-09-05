@@ -8,7 +8,15 @@
 
 ## 1. Executive summary
 
-Venkat AI Platform (VAP) is a **multi-agent orchestration system** intended as both a personal “principal architect operating system” and a portfolio-grade reference architecture. It combines a **LangGraph** workflow, **multi-LLM routing**, **RAG** over **Qdrant** with optional **Pinecone** dual-write, **observability** via **Langfuse**, **durable conversation/workflow persistence** in **PostgreSQL**, **scheduled automation** via **Redis + ARQ**, and **notification fan-out** (Slack, Telegram, WhatsApp/Twilio).
+Venkat AI Platform (VAP) is a **multi-agent orchestration system** — built as a personal “principal architect operating system,” doubling as a portfolio-grade reference architecture. It combines:
+
+- **LangGraph** workflow
+- **Multi-LLM** routing
+- **RAG** over **Qdrant**, with optional **Pinecone** dual-write
+- **Observability** via **Langfuse**
+- **Durable conversation/workflow persistence** in **PostgreSQL**
+- **Scheduled automation** via **Redis + ARQ**
+- **Notification fan-out** (Slack, Telegram, WhatsApp/Twilio)
 
 This document captures **architecture intent**, **decision rationale**, **tradeoffs**, **risk posture**, **cost levers**, and **scalability pathways** suitable for external publication after organizational sanitization (credentials, proprietary data flows).
 
