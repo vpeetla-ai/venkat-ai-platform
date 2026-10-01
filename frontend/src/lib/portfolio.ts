@@ -37,11 +37,11 @@ export const profile = {
   name: "Venkata Peetla",
   shortName: "Venkat",
   title: "Principal AI Architect",
-  tagline: "Sr. Staff Engineer @ Lucid Motors · Agentic AI · Production MLOps",
+  tagline: "Principal AI Architect · Digital employees for regulated operations",
   headline:
-    "Enterprise AI architect turning agentic systems, platform modernization, and operating workflows into measurable business outcomes.",
-  bio: "I operate at the intersection of hands-on principal engineering, AI architecture, and director-level execution — 19+ years across mobile, full-stack platforms, DevOps, retail commerce, supply chain, and production AI/ML. Executives get clarity; engineering teams get durable architecture.",
-  roles: ["Principal AI Engineer", "AI Architect", "Director of AI / Engineering"],
+    "Digital employees that own verification, research, and adjudication inside a screener’s existing systems.",
+  bio: "Principal AI Architect at SNH AI. A digital employee owns a regulated role end to end, in the systems a screening operation already runs, with a trace on every action and a person on the exception. 19+ years across mobile, full-stack platforms, DevOps, retail commerce, supply chain, and production AI/ML — including Sr. Staff Engineer at Lucid Motors (Nov 2023–Sep 2026).",
+  roles: ["Principal AI Architect", "SNH AI", "Digital Employees"],
   email: "vpeetla.ai@gmail.com",
   site: "https://venkat-ai.com",
   links: {
