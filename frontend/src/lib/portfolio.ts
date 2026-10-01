@@ -39,8 +39,8 @@ export const profile = {
   title: "Principal AI Architect",
   tagline: "Principal AI Architect · Digital employees for regulated operations",
   headline:
-    "Digital employees that own verification, research, and adjudication inside a screener’s existing systems.",
-  bio: "Principal AI Architect at SNH AI. A digital employee owns a regulated role end to end, in the systems a screening operation already runs, with a trace on every action and a person on the exception. 19+ years across mobile, full-stack platforms, DevOps, retail commerce, supply chain, and production AI/ML — including Sr. Staff Engineer at Lucid Motors (Nov 2023–Sep 2026).",
+    "Governed agent systems for regulated work — digital employees that own a whole role inside the customer’s existing systems.",
+  bio: "Principal AI Architect at SNH AI. A digital employee owns a regulated role end to end, in the systems a screening operation already runs, with a trace on every action and a person on the exception. 19 years across mobile, full-stack platforms, DevOps, retail commerce, supply chain, and production AI/ML — including Sr. Staff Engineer at Lucid Motors (Nov 2023–Sep 2026).",
   roles: ["Principal AI Architect", "SNH AI", "Digital Employees"],
   email: "vpeetla.ai@gmail.com",
   site: "https://venkat-ai.com",
